@@ -1,0 +1,12 @@
+addi R1, R0, 24
+addi R2, R0, 124
+fld F2, 200(R0)
+loop: fld F0, 0(R1)
+      fmul F0, F0, F2
+      fld F4, 0(R2)
+      fadd F0, F0, F4
+      fsd F0, 0(R2)
+      addi R1, R1, -8
+      addi R2, R2, -8
+      bne R1, $0, loop
+addi R1, R0, 36
