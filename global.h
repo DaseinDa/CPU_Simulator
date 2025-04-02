@@ -1,9 +1,13 @@
+#pragma once
 #include "string.h"
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+#include <iomanip>
 using namespace std;
-
+#define RESGITER_NUMBER 32
+#define MAX_BTB_SIZE 16
+#define ZERO_REGISTER "$0"
 extern unsigned int NF;
 extern unsigned int NI;
 extern unsigned int NW;
@@ -30,16 +34,18 @@ class Instruction{
 public:
     InstructionType opcode;
     vector<string> operands;
-    // int immediate;
+    optional<int> immediate;
     optional<string> label;
     optional<string> target;
+    int instructionNumber;
     // Instruction(){};
     Instruction() {};
     Instruction(InstructionType op, const std::vector<std::string>& ops,
                 const std::optional<std::string>& lbl = std::nullopt,
                 const std::optional<std::string>& tgt = std::nullopt)
-        : opcode(op), operands(ops), label(lbl), target(tgt) {};
+        : opcode(op), operands(ops), label(lbl), target(tgt) {recognizeImmediare();};
 
+    void recognizeImmediare();
     void executeInstruction(){
         if(opcode == addi){
             cout<<"This is a addi instruction"<<endl;
@@ -50,6 +56,9 @@ public:
         std::cout << "Opcode: " << static_cast<int>(opcode) << ", Operands: ";
         for (const auto& op : operands) {
             std::cout << op << " ";
+        }
+        if(immediate.has_value()){
+            std::cout << ", immediate: " << immediate.value();
         }
         if (label.has_value()) {
             std::cout << ", Label: " << label.value();
@@ -62,9 +71,17 @@ public:
 
 };
 
-
+string InstructionTypetoInstr(const InstructionType opcode);
 InstructionType toInstructionType(const std::string opcode);
+string addSpaceAfterComma(const std::string& line);
 
+enum BranchPredictionStage {
+    PREDICT_WEAK_TAKEN,
+    PREDICT_STRONG_TAKEN,
+    PREDICT_WEAK_NOT_TAKEN,
+    PREDICT_STRONG_NOT_TAKEN,
+};
+string getInstructionAddress(int instructionNumber);
 // 调转执行示例:
 // else if (inst.opcode == "ne") {
 //         // bne rs, rt, target

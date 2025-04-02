@@ -1,0 +1,8 @@
+1. memory length. 400, linked list 200 0-200 initially with 0
+2. register quantity. 32 registers. register renaming: free registers back to the list. wait for previous instrucion commit
+3. read file  
+4. load buffer time. ROB ignore the read/write buffer time
+
+
+add R1,R2,R3
+fstream function C++, isstreamLine

@@ -52,7 +52,8 @@ int main(int argc, char *argv[])
                 break;
         }    
     }
-    ReadAssemblyFile("assembly.dat");
+    Simulator simulator;
+    simulator.ReadAssemblyFile("assembly.dat");
+    simulator.pipelineGlobalCycle();
     return 0;
 }
-

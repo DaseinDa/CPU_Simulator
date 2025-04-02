@@ -10,7 +10,7 @@ LDFLAGS =
 # Makefile settings - Can be customized.
 APPNAME = myapp
 EXT = .cpp
-SRCDIR = /home/dell/Desktop/CS2410_Simulator/
+SRCDIR = /home/dell/Desktop/Simulator/
 OBJDIR = obj
 
 ############## Do not change anything from here downwards! #############
