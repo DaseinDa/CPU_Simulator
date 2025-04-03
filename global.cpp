@@ -1,5 +1,14 @@
 #include "global.h"
 
+// Define the global variables
+namespace Global {
+    unordered_map<string, size_t> labelMap;
+    vector<Instruction> instructions;//the original instructions we can check during the simulation
+    deque<Instruction> instructionset;//only change instructionset during the simulation
+    deque<Instruction> fetchInstructionQueue;   
+    int fetch_pointer=0;
+    BTB btb;
+}
 unsigned int NF=4;
 bool DebugMode=true;
 InstructionType toInstructionType(const std::string opcode) {

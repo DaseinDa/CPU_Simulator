@@ -4,9 +4,13 @@
 #include <vector>
 #include <unordered_map>
 #include <iomanip>
+#include <deque>
+#include <optional>
+#include <sstream>
+#include "BranchPredictStage.h"
+#include "btb.h"
 using namespace std;
 #define RESGITER_NUMBER 32
-#define MAX_BTB_SIZE 16
 #define ZERO_REGISTER "$0"
 extern unsigned int NF;
 extern unsigned int NI;
@@ -14,6 +18,7 @@ extern unsigned int NW;
 extern unsigned int NB;
 extern unsigned int NR;
 extern bool DebugMode;
+
 enum InstructionType {
     fld,
     fsd,
@@ -74,14 +79,17 @@ public:
 string InstructionTypetoInstr(const InstructionType opcode);
 InstructionType toInstructionType(const std::string opcode);
 string addSpaceAfterComma(const std::string& line);
+namespace Global {
+    extern unordered_map<string, size_t> labelMap;
+    extern vector<Instruction> instructions;
+    extern deque<Instruction> instructionset;
+    extern deque<Instruction> fetchInstructionQueue;
+    extern int fetch_pointer;
+    extern BTB btb;
+}
 
-enum BranchPredictionStage {
-    PREDICT_WEAK_TAKEN,
-    PREDICT_STRONG_TAKEN,
-    PREDICT_WEAK_NOT_TAKEN,
-    PREDICT_STRONG_NOT_TAKEN,
-};
 string getInstructionAddress(int instructionNumber);
+int getBTBposition(int instructionNumber);
 // 调转执行示例:
 // else if (inst.opcode == "ne") {
 //         // bne rs, rt, target

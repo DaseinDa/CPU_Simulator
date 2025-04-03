@@ -1,5 +1,7 @@
 #pragma once
-#include "global.h"
+#include "BranchPredictStage.h"
+#include <iostream>
+using namespace std;
 class BranchPredict{
     private: BranchPredictionStage stage=PREDICT_WEAK_TAKEN;
     public:

@@ -41,7 +41,7 @@ void Simulator::readInstruction(string line){
         label = line.substr(0, colonPos);
         line = line.substr(colonPos + 1);
         line.erase(0, line.find_first_not_of(" \t"));
-        labelMap[label] = index; // 记录标签对应的指令索引
+        Global::labelMap[label] = index; // 记录标签对应的指令索引
     }
     if(DebugMode){
         printLabelMap();
@@ -73,11 +73,11 @@ void Simulator::readInstruction(string line){
     if (type != InstructionType::bne && !op3.empty()) {
         operands.push_back(op3); // 对于非跳转指令，op3 是操作数
     }
-    instructions.emplace_back(type, operands, optLabel, target);
+    Global::instructions.emplace_back(type, operands, optLabel, target);
 }
 Simulator::~Simulator(){
     memory.clear();
-    labelMap.clear();
+    Global::labelMap.clear();
     if(DebugMode){
         cout<<"Here is the construct function for Simulator class"<<endl;
     }
@@ -134,19 +134,19 @@ void Simulator::ReadAssemblyFile(char * PathFile){
             cout<<"Address:"<<pair.first<<" Value:"<<pair.second<<endl;
     }
     }
-    for (size_t i = 0; i < instructions.size(); ++i) {
+    for (size_t i = 0; i < Global::instructions.size(); ++i) {
         std::cout << "Instruction " << i << ": ";
         cout<<"Instruction Address:"<<getInstructionAddress(i)<<" ";
-        instructions[i].print();
-        instructions[i].instructionNumber=i;
+        Global::instructions[i].print();
+        Global::instructions[i].instructionNumber=i;
         cout<<"Instruction Address:"<<getInstructionAddress(i)<<endl;
         }
     
     ifs.close();
     //赋值给instructionset
-    instructionset.assign(instructions.begin(),instructions.end());
+    Global::instructionset.assign(Global::instructions.begin(),Global::instructions.end());
     if(DebugMode){
-        if(instructionset.empty()){
+        if(Global::instructionset.empty()){
             cout<<"-------------------instructionset fail to copy-----------"<<endl;
         }
     }
@@ -154,10 +154,10 @@ void Simulator::ReadAssemblyFile(char * PathFile){
 void Simulator::pipelineGlobalCycle(){
     global_cycle++;
     cout<<"The current global cycle count is:"<<global_cycle<<endl;
-    if(instructionset.empty()){
+    if(Global::instructionset.empty()){
         cout<<"-------------------instructionset fail to copy-----------"<<endl;
     }
-    this->f= new Fetch(instructionset,fetchInstructionQueue,btb,nf,labelMap);
+    this->f= new Fetch();
     //commit
     //write back
     //memory access
