@@ -8,6 +8,7 @@
 #include <optional>
 #include <sstream>
 #include "BranchPredictStage.h"
+class BTB;//Forward declaration
 #include "btb.h"
 using namespace std;
 #define RESGITER_NUMBER 32

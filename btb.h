@@ -1,8 +1,10 @@
 #pragma once
 #include <list>
 #include <unordered_map>
+#include <stdexcept> // 包含标准异常类
+#include <iostream>
 #include "branchPrediction.h"
-// #include "global.h"
+#include "global.h"
 using namespace std;
 class BTB{
     private:

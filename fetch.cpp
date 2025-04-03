@@ -21,13 +21,12 @@ bool Fetch::dispatch(){
             //如果指令是bne还需要另外写代码判断，但现在先不考虑bne的情况
             if(fetch_intr.opcode==InstructionType::bne){//branch prediction
                 string target_str = fetch_intr.target.value();
-                // bool btb_predict=Global::btb.btbMap[getInstructionAddress(fetch_intr.instructionNumber)].predict();
-                //如果代码中存在该label，且预测为taken，则跳转
-                // if(Global::labelMap.count(target_str)>0 && btb_predict){
-                // Global::fetch_pointer=Global::labelMap.at(target_str);
-                // }else{
-                //     Global::fetch_pointer++;
-                // }
+                int target_position=Global::btb.getTargetPosition(fetch_intr.instructionNumber);
+                if(target_position!=-1){
+                    Global::fetch_pointer=target_position;
+                }else{
+                    Global::fetch_pointer++;// oredict not taken
+                }
             }else{
                 Global::fetch_pointer++;
             }
