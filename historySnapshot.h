@@ -12,7 +12,8 @@
 #include "btb.h"
 #include "renaming.h"
 #include "snapshotType.h"
-#include "global.h"
+
+// #include "global.h"
 using namespace std;
 
 class HistorySnapshot {
@@ -22,7 +23,7 @@ class HistorySnapshot {
         HistorySnapshot();
         Snapshot* findMatchingSnapshot(int instruction_number, int execution_count);
         void addSnapshot(Instruction bne_instruction);
-        void predictionTrueFalseRecover(Instruction bne_instruction, bool prediction);
+        void predictionTrueFalseRecover(Instruction bne_instruction, bool actucalPrediction);
         void printHistory();
         void printSnapshot(const Snapshot snapshot);
 };

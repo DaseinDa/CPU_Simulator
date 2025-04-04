@@ -8,6 +8,7 @@
 #include <sstream>
 #include <unordered_map>
 #include "global.h"
+#include "historySnapshot.h"
 // #include "btb.h"
 using namespace std;
 class Fetch{

@@ -6,4 +6,5 @@ obj/historySnapshot.o: /home/dell/Desktop/Simulator//historySnapshot.cpp \
  /home/dell/Desktop/Simulator//branchPrediction.h \
  /home/dell/Desktop/Simulator//renaming.h \
  /home/dell/Desktop/Simulator//global.h \
+ /home/dell/Desktop/Simulator//common.h \
  /home/dell/Desktop/Simulator//snapshotType.h

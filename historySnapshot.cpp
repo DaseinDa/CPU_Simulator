@@ -19,15 +19,16 @@ void HistorySnapshot::addSnapshot(Instruction bne_instruction) {
     history_snapshots.push_back(snapshot);
 }
 
-void HistorySnapshot::predictionTrueFalseRecover(Instruction bne_instruction, bool prediction) {
+void HistorySnapshot::predictionTrueFalseRecover(Instruction bne_instruction, bool actucalPrediction) {
     if(bne_instruction.opcode != InstructionType::bne) {
         throw runtime_error("predictionTrueFalse() called with non-BNE instruction");
     }
-    if(prediction) {
-        //因为程序顺序不改变，对历史快照不做任何操作
+    Snapshot* snapshot = findMatchingSnapshot(bne_instruction.instructionNumber, bne_instruction.executionCount);
+
+    if(actucalPrediction==snapshot->btb.getPrediction(bne_instruction.instructionNumber)) {
+        //预测正确，因为程序顺序不改变，对历史快照不做任何操作
     } else {
-        //恢复快照
-        Snapshot* snapshot = findMatchingSnapshot(bne_instruction.instructionNumber, bne_instruction.executionCount);
+        //预测错误，恢复快照
         if(snapshot == nullptr) {
             throw runtime_error("predictionTrueFalse() called with non-BNE instruction");
         }
@@ -50,6 +51,15 @@ void HistorySnapshot::predictionTrueFalseRecover(Instruction bne_instruction, bo
         //7. 恢复execute
         //8. 恢复write back
         //9. 恢复commit
+        //快照是在pointer指向bne时存储的，恢复快照会使得fetch pointer重新指向bne,这里要根据实际分支结果来更新fetch pointer
+        //回滚完成后 预测器状态也会回滚到当初的状态，所以根据当初的分支预测器状态就能知道该bne预测时的结果
+        if(actucalPrediction) {
+            //Actual taken
+            Global::fetch_pointer = snapshot->btb.getTargetPosition(bne_instruction.instructionNumber);
+        } else {
+            //Actual not taken
+            Global::fetch_pointer++;
+        }   
 
         //预测错误，当前bne后的路径错误，程序顺序不再使用，删除从现在现在的快照snap后的所有快照
         auto it = std::find_if(history_snapshots.begin(), history_snapshots.end(),

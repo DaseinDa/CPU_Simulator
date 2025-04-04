@@ -1,6 +1,5 @@
 #include "global.h"
-
-
+#include "historySnapshot.h"
 namespace Global {
     unordered_map<string, size_t> labelMap;
     unordered_map<int, double> memory_value;
@@ -10,7 +9,7 @@ namespace Global {
     deque<Instruction> fetchInstructionQueue;   
     int fetch_pointer=0;
     BTB btb;
-    // HistorySnapshot historySnapshot;
+    HistorySnapshot historySnapshot;
 }
 unsigned int NF=4;
 bool DebugMode=true;

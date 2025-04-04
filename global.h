@@ -14,10 +14,8 @@ class BTB;//Forward declaration
 class RegisterRenaming;//Forward declaration
 #include "renaming.h"
 class HistorySnapshot;//Forward declaration
-// #include "historySnapshot.h"
 using namespace std;
-#define RESGITER_NUMBER 32
-#define ZERO_REGISTER "$0"
+
 extern unsigned int NF;
 extern unsigned int NI;
 extern unsigned int NW;
@@ -35,7 +33,7 @@ namespace Global {
     extern deque<Instruction> fetchInstructionQueue;
     extern int fetch_pointer;
     extern BTB btb;
-    // extern HistorySnapshot historySnapshot;
+    extern HistorySnapshot historySnapshot;
 }
 
 string getInstructionAddress(int instructionNumber);

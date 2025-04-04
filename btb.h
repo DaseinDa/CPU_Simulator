@@ -16,5 +16,6 @@ class BTB{
         ~BTB();
         int getTargetPosition(int instructionNumber);
         void update(int instructionNumber,bool taken);
+        bool getPrediction(int instructionNumber);
         // void ifPredictTrueFalse(Instruction bne_instr);//根据唯一标识的bne指令恢复快照
 };

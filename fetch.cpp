@@ -24,7 +24,7 @@ bool Fetch::dispatch(){
                 string target_str = fetch_intr.target.value();
                 int target_position=Global::btb.getTargetPosition(fetch_intr.instructionNumber);
                 // //添加历史快照
-                // Global::historySnapshot.addSnapshot(fetch_intr);
+                Global::historySnapshot.addSnapshot(fetch_intr);
                 if(target_position!=-1){
                     Global::fetch_pointer=target_position;
                 }else{

@@ -49,6 +49,19 @@ int BTB::getTargetPosition(int instructionNumber){//在fetch阶段使用,return 
         return target_position;
     }
 }
+bool BTB::getPrediction(int instructionNumber){
+    int key=getBTBposition(instructionNumber);
+    if(btbMap.count(key)){
+        auto [tag,target_position,predictor]=btbMap[key];
+        if(tag == instructionNumber){
+            return predictor.predict();
+        }else{
+            throw runtime_error("######BTB getPrediction failed, instructionNumber not correct in BTB");  
+        }
+    }else{
+        throw runtime_error("######BTB getPrediction failed, key not found in BTB");  
+    }
+}
 
 // void BTB::ifPredictTrueFalse(Instruction bne_instr){
 //     //如果预测正确，更新cdb
