@@ -16,12 +16,15 @@ bool Fetch::dispatch(){
             return false;
             //return fetchStall=fetchInstructionQueue.size()
         }else{
+            Global::instructionset[Global::fetch_pointer].fetchExecutionCount();
             Instruction fetch_intr = Global::instructionset[Global::fetch_pointer];
             Global::fetchInstructionQueue.push_back(fetch_intr);
             //如果指令是bne还需要另外写代码判断，但现在先不考虑bne的情况
             if(fetch_intr.opcode==InstructionType::bne){//branch prediction
                 string target_str = fetch_intr.target.value();
                 int target_position=Global::btb.getTargetPosition(fetch_intr.instructionNumber);
+                // //添加历史快照
+                // Global::historySnapshot.addSnapshot(fetch_intr);
                 if(target_position!=-1){
                     Global::fetch_pointer=target_position;
                 }else{

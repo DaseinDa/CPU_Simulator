@@ -4,5 +4,6 @@ obj/simulator.o: /home/dell/Desktop/Simulator//simulator.cpp \
  /home/dell/Desktop/Simulator//BranchPredictStage.h \
  /home/dell/Desktop/Simulator//btb.h \
  /home/dell/Desktop/Simulator//branchPrediction.h \
+ /home/dell/Desktop/Simulator//instruction.h \
  /home/dell/Desktop/Simulator//renaming.h \
  /home/dell/Desktop/Simulator//fetch.h

@@ -1,7 +1,15 @@
 #include "btb.h"
-BTB::~BTB() {cout<<"BTB destructor called"<<endl;}
+#include "global.h"
 
+BTB::~BTB() {cout<<"BTB destructor called"<<endl;}
+//Tag is the instruction number
 void BTB::update(int instructionNumber,bool taken){//在实际bne execute period 分支预测结果出来后使用
+    int key=getBTBposition(instructionNumber);
+    auto& [tag,target_position,predictor]=btbMap[key];
+    if(tag == instructionNumber){
+        //update the predictor
+        predictor.update(taken);
+    }
 }
 
 int BTB::getTargetPosition(int instructionNumber){//在fetch阶段使用,return -1 means not taken,同时做了分支预测判断
@@ -41,3 +49,10 @@ int BTB::getTargetPosition(int instructionNumber){//在fetch阶段使用,return 
         return target_position;
     }
 }
+
+// void BTB::ifPredictTrueFalse(Instruction bne_instr){
+//     //如果预测正确，更新cdb
+//     //如果预测错误，恢复历史快照,包括btb, 寄存器重命名mappingtable, freelist，ROB， pipeline队列比如fetch queue, issue queue, execute queue, memory queue, write back queue
+//     //如果预测错误instructionset也要恢复快照，因为里面记录了executionCount,需要回滚到快照才能继续正确积累。不然fetchInstructionQueue一直是1
+//    //依然要更新cdb,更新bne的执行结果到cdb
+// }

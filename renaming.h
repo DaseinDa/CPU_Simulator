@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <fstream>
 #include <string.h>
@@ -9,6 +10,7 @@
 #include <unordered_map>
 #include "global.h"
 using namespace std;
+
 class RegisterRenaming{
     private:
         // register renaming
@@ -16,9 +18,9 @@ class RegisterRenaming{
         unordered_map<string, string> registerRenamingMapping;//寄存器名最新对应的物理寄存器比如$0对应p0
         deque<string> RegisterRenamingFreeList;//可用的物理寄存器
         unordered_map<string, double> physicalRegister;
-        //history只有在bne才用得到
-        deque<unordered_map<string, string>> mappingTableHistory;//记录历史的寄存器重命名关系
-        deque<deque<string>> freeListHistory;
+        // //history只有在bne才用得到
+        // deque<unordered_map<string, string>> mappingTableHistory;//记录历史的寄存器重命名关系
+        // deque<deque<string>> freeListHistory;
     public:
     ~RegisterRenaming(){initPhysicalRegs();};
     void initPhysicalRegs();

@@ -1,4 +1,5 @@
 #include "simulator.h"
+
 const char COMMENT_LINE_PREFIX = '%';
 
 bool isCommentLine(const string line) {
@@ -27,7 +28,7 @@ void Simulator::readMemory(string line){
     address=stoi(address_text);
     value=stof(value_text);
     // Read to memory
-    memory[address]=value;
+    Global::memory_value[address]=value;
 
 }
 void Simulator::readInstruction(string line){
@@ -76,7 +77,7 @@ void Simulator::readInstruction(string line){
     Global::instructions.emplace_back(type, operands, optLabel, target);
 }
 Simulator::~Simulator(){
-    memory.clear();
+    Global::memory_value.clear();
     Global::labelMap.clear();
     if(DebugMode){
         cout<<"Here is the construct function for Simulator class"<<endl;
@@ -130,7 +131,7 @@ void Simulator::ReadAssemblyFile(char * PathFile){
     }
     if(DebugMode){
         cout<<"The initialized memory address and value is:"<<endl;
-        for(const auto& pair: memory){
+        for(const auto& pair: Global::memory_value){
             cout<<"Address:"<<pair.first<<" Value:"<<pair.second<<endl;
     }
     }
