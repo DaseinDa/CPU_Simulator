@@ -1,4 +1,5 @@
 #include "instruction.h"
+
 InstructionType toInstructionType(const std::string opcode) {
     static const std::unordered_map<std::string, InstructionType> opcodeMap = {
         {"fld", InstructionType::fld},
@@ -118,5 +119,5 @@ UnitType Instruction::getUnitType(){
     return Unit::getUnitType(opcode);
 }
 int Instruction::getLatency(){
-    return Unit::getLatency(opcode);
+    return Unit::getInstrLatency(opcode);
 }

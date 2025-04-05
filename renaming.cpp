@@ -1,4 +1,5 @@
 #include "renaming.h"
+#include "instruction.h"
 void RegisterRenaming::initPhysicalRegs(){
     // $0 register is default always to save the 0 address in the whole process
     physicalRegister[ZERO_REGISTER]=0;

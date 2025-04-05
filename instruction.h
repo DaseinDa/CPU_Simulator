@@ -8,20 +8,11 @@
 #include <optional>
 #include <sstream>
 #include "unit.h"
+#include "instruction_type.h"
+#include "unit_type.h"
 using namespace std;
 
-enum InstructionType {
-    fld,
-    fsd,
-    add,
-    addi,
-    slt,
-    fadd,
-    fsub,
-    fmul,
-    fdiv,
-    bne
-};
+
 // typedef struct reg {
 //     string register_name;
 //     int value;
