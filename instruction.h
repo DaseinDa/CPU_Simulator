@@ -7,6 +7,7 @@
 #include <deque>
 #include <optional>
 #include <sstream>
+#include "unit.h"
 using namespace std;
 
 enum InstructionType {
@@ -52,6 +53,8 @@ public:
             cout<<"This is a addi instruction"<<endl;
         }
 };
+    UnitType getUnitType();
+    int getLatency();
     // 打印指令信息
     void print() const {
         std::cout << "Opcode: " << static_cast<int>(opcode) << ", Operands: ";

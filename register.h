@@ -1,2 +1,0 @@
-// class register
-// register renaming

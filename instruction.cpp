@@ -114,3 +114,9 @@ string getInstructionAddress(int instructionNumber) {
     
     return ss.str();
 }
+UnitType Instruction::getUnitType(){
+    return Unit::getUnitType(opcode);
+}
+int Instruction::getLatency(){
+    return Unit::getLatency(opcode);
+}

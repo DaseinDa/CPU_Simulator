@@ -11,6 +11,7 @@
 #include "renaming.h"
 #include "fetch.h"
 #include "btb.h"
+#include "instruction.h"
 using namespace std;
 
 void ReadAssemblyFile(char * PathFile);

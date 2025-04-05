@@ -10,6 +10,7 @@
 #include <unordered_map>
 #include "global.h"
 #include "common.h"
+#include "instruction.h"
 using namespace std;
 
 class RegisterRenaming{
