@@ -26,6 +26,9 @@ public:
     optional<string> target;
     int executionCount=0;
     int instructionNumber=0;
+    //当开始fetch时候，记录指令的程序顺序和status
+    optional<int> ID_in_Queue;
+    optional<int> status_in_Queue;
     // Instruction(){};
     Instruction() {};
     Instruction(InstructionType op, const std::vector<std::string>& ops,

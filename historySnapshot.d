@@ -9,4 +9,5 @@ obj/historySnapshot.o: /home/dell/Desktop/Simulator//historySnapshot.cpp \
  /home/dell/Desktop/Simulator//renaming.h \
  /home/dell/Desktop/Simulator//common.h \
  /home/dell/Desktop/Simulator//instruction_type.h \
+ /home/dell/Desktop/Simulator//unit_type.h \
  /home/dell/Desktop/Simulator//snapshotType.h

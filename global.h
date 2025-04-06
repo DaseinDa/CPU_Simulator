@@ -15,7 +15,7 @@ class RegisterRenaming;//Forward declaration
 #include "renaming.h"
 class HistorySnapshot;//Forward declaration
 using namespace std;
-
+#include "archiRegister.h"
 extern unsigned int NF;
 extern unsigned int NI;
 extern unsigned int NW;
@@ -30,10 +30,16 @@ namespace Global {
     extern RegisterRenaming renaming_worker;
     extern vector<Instruction> instructions;
     extern deque<Instruction> instructionset;
+    //记录程序顺序
+    extern deque<Instruction> instructionQueue;//也需要能标识每条指令处于fetch-commit的哪个阶段
     extern deque<Instruction> fetchInstructionQueue;
     extern int fetch_pointer;
     extern BTB btb;
     extern HistorySnapshot historySnapshot;
+    extern unordered_map<string, ArchitectureRegister> architectureRegisterFile;
+    //decode
+    extern deque<Instruction> decodeInstructionQueue;
+    extern int renameStall;
 }
 
 string getInstructionAddress(int instructionNumber);

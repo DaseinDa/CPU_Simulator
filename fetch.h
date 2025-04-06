@@ -20,6 +20,7 @@ class Fetch{
         //fetch to condition out-order branch prediction
     public:
         bool dispatch();
+        void fetch();
     Fetch(const Fetch&) = delete;
     Fetch& operator=(const Fetch&) = delete;
     Fetch(Fetch&&) = delete;             // 禁用移动构造

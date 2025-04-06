@@ -6,34 +6,39 @@ Fetch::Fetch(){
 
 bool Fetch::dispatch(){
     cout<<"fetch dispatching..., nf="<<nf<<endl;
-    for(int i=0;i<nf;i++){
+    if(Global::fetchInstructionQueue.size()>=nf){
+        return false;//如果已经没有空余bandwidth,什么都不fetch,count as a stall
+    }
+    int startFetchQueueSize=Global::fetchInstructionQueue.size();
+    int capacity=nf-startFetchQueueSize;
+    for(int i=0;i<capacity;i++){
         cout<<"i="<<i<<endl;
-    if(Global::instructionset.empty()||Global::fetch_pointer >=Global::instructionset.size()){
-            cout<<"All instructions have been taken in the pipeline"<<endl;
-            return true;
-        }else if(Global::fetchInstructionQueue.size()!=0){
-            cout<<"At least one instruction which has been fetched in the previous cycle did not dispatch to decode stage at current cycle."<<endl;
-            return false;
-            //return fetchStall=fetchInstructionQueue.size()
-        }else{
-            Global::instructionset[Global::fetch_pointer].fetchExecutionCount();
-            Instruction fetch_intr = Global::instructionset[Global::fetch_pointer];
-            Global::fetchInstructionQueue.push_back(fetch_intr);
-            //如果指令是bne还需要另外写代码判断，但现在先不考虑bne的情况
-            if(fetch_intr.opcode==InstructionType::bne){//branch prediction
-                string target_str = fetch_intr.target.value();
-                int target_position=Global::btb.getTargetPosition(fetch_intr.instructionNumber);
-                // //添加历史快照
-                Global::historySnapshot.addSnapshot(fetch_intr);
-                if(target_position!=-1){
-                    Global::fetch_pointer=target_position;
-                }else{
-                    Global::fetch_pointer++;// oredict not taken
-                }
-            }else{
-                Global::fetch_pointer++;
-            }
+        if(Global::instructionset.empty()||Global::fetch_pointer >=Global::instructionset.size()){
+                cout<<"All instructions have been taken in the pipeline"<<endl;
+                return true;
+        }else{ 
+            fetch();//for 循环中不能return,否则剩下的bandwidth没有做fetch
         }
+    }
+    return (Global::instructionset.empty()|| startFetchQueueSize==0);//既没有取完，又存在之前的指令stall了
+}
+void Fetch::fetch(){
+    Global::instructionset[Global::fetch_pointer].fetchExecutionCount();
+    Instruction fetch_intr = Global::instructionset[Global::fetch_pointer];
+    Global::fetchInstructionQueue.push_back(fetch_intr);
+    //如果指令是bne还需要另外写代码判断，但现在先不考虑bne的情况
+    if(fetch_intr.opcode==InstructionType::bne){//branch prediction
+        string target_str = fetch_intr.target.value();
+        int target_position=Global::btb.getTargetPosition(fetch_intr.instructionNumber);
+        // //添加历史快照
+        Global::historySnapshot.addSnapshot(fetch_intr);
+        if(target_position!=-1){
+            Global::fetch_pointer=target_position;
+        }else{
+            Global::fetch_pointer++;// oredict not taken
+        }
+    }else{
+        Global::fetch_pointer++;
     }
 }
 // cout << "Fetch构造函数中 instructionset 地址: " << &(this->instructionset) << endl;

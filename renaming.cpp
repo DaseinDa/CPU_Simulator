@@ -2,11 +2,12 @@
 #include "instruction.h"
 void RegisterRenaming::initPhysicalRegs(){
     // $0 register is default always to save the 0 address in the whole process
-    physicalRegister[ZERO_REGISTER]=0;
+    physicalRegister_value[ZERO_REGISTER]=0;
     for(int i=0; i<RESGITER_NUMBER;i++){
         string physicalRegisterName="p"+to_string(i);
         //initialization
-        physicalRegister[physicalRegisterName]=0;
+        physicalRegister_value[physicalRegisterName]=0;
+        physicalRegisterReady[physicalRegisterName]=false;
         //The free list of physical register not used, only distributed p1-p31
         RegisterRenamingFreeList.push_back(physicalRegisterName);
     }
@@ -27,6 +28,13 @@ string RegisterRenaming::allocatePhysicalReg(string originRegName, bool isDesReg
         string freeReg = RegisterRenamingFreeList.front();
         RegisterRenamingFreeList.pop_front();
         registerRenamingMapping[originRegName]=freeReg;
+        if(!isValidPhysicalRegister(freeReg)){
+            throw runtime_error("Invalid physical register: " + freeReg);
+        }
+        //Global::architectureRegister的list需要更新或者添加。而且ready需要设置为false
+        Global::architectureRegisterFile[originRegName].physicalRegister.push_back(freeReg);
+        Global::architectureRegisterFile[originRegName].isReady=false;
+        return freeReg;
     }
 }
 
@@ -228,4 +236,29 @@ bool RegisterRenaming::instructionRegisterRenaming(Instruction& intr){
 }
 string RegisterRenaming::getPhysicalRegID(string originRegName){
     return registerRenamingMapping[originRegName];
+}
+bool RegisterRenaming::isValidPhysicalRegister(string physicalRegisterName){
+    // 检查格式是否为 "p" + 数字
+    if(physicalRegisterName==ZERO_REGISTER){
+        return true;
+    }else if (physicalRegisterName.empty() || physicalRegisterName[0] != 'p') {
+        return false;
+    }
+
+    // 提取数字部分
+    string num_str = physicalRegisterName.substr(1);
+    if (num_str.empty()) {
+        return false;
+    }
+
+    // 检查是否全是数字
+    for (char c : num_str) {
+        if (!std::isdigit(c)) {
+            return false;
+        }
+    }
+
+    // 转换为整数并检查范围
+    int index = std::stoi(num_str);
+    return index >= 0 && index < RESGITER_NUMBER; // P0 到 P31
 }
