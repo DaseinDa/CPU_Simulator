@@ -29,6 +29,10 @@ public:
     //当开始fetch时候，记录指令的程序顺序和status
     optional<int> ID_in_Queue;
     optional<int> status_in_Queue;
+    string Qj;
+    string Qk;
+    double Vj;
+    double Vk;
     // Instruction(){};
     Instruction() {};
     Instruction(InstructionType op, const std::vector<std::string>& ops,

@@ -25,7 +25,10 @@ bool Fetch::dispatch(){
 void Fetch::fetch(){
     Global::instructionset[Global::fetch_pointer].fetchExecutionCount();
     Instruction fetch_intr = Global::instructionset[Global::fetch_pointer];
+    fetch_intr.ID_in_Queue=Global::instructionQueue.size();
     Global::fetchInstructionQueue.push_back(fetch_intr);
+    fetch_intr.status_in_Queue=InstructionStatus::FETCH;
+    Global::instructionQueue.push_back(fetch_intr);
     //如果指令是bne还需要另外写代码判断，但现在先不考虑bne的情况
     if(fetch_intr.opcode==InstructionType::bne){//branch prediction
         string target_str = fetch_intr.target.value();

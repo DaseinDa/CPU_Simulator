@@ -7,5 +7,7 @@ obj/instruction.o: /home/dell/Desktop/Simulator//instruction.cpp \
  /home/dell/Desktop/Simulator//branchPrediction.h \
  /home/dell/Desktop/Simulator//renaming.h \
  /home/dell/Desktop/Simulator//common.h \
+ /home/dell/Desktop/Simulator//archiRegister.h \
+ /home/dell/Desktop/Simulator//dependency.h \
  /home/dell/Desktop/Simulator//instruction_type.h \
  /home/dell/Desktop/Simulator//unit_type.h

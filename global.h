@@ -16,6 +16,7 @@ class RegisterRenaming;//Forward declaration
 class HistorySnapshot;//Forward declaration
 using namespace std;
 #include "archiRegister.h"
+#include "dependency.h"
 extern unsigned int NF;
 extern unsigned int NI;
 extern unsigned int NW;
@@ -40,6 +41,8 @@ namespace Global {
     //decode
     extern deque<Instruction> decodeInstructionQueue;
     extern int renameStall;
+    //依赖关系
+    extern map<int,DependencyList> dependency_map;   
 }
 
 string getInstructionAddress(int instructionNumber);
