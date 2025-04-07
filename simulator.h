@@ -10,6 +10,8 @@
 #include "global.h"
 #include "renaming.h"
 #include "fetch.h"
+#include "decode.h"
+#include "issue.h"
 #include "btb.h"
 #include "instruction.h"
 using namespace std;
@@ -35,9 +37,12 @@ class Simulator{
         RegisterRenaming renaming_worker;
         //Stall
         int fetchStall=0;
+        int decodeStall=0;
+        int issueStall=0;
         //branch prediction with 16 entry
     //     BTB btb;
     public:
+    Simulator();
     ~Simulator();
     void ReadAssemblyFile(char * PathFile);
     void readInstruction(string line);
@@ -49,7 +54,8 @@ class Simulator{
 
     //fetch
     Fetch *f;
-
+    Decode *d;
+    Issue *i;
     //execute
     void execute();
     void commitInstruction();

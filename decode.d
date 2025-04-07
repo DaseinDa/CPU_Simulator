@@ -12,4 +12,5 @@ obj/decode.o: /home/dell/Desktop/Simulator//decode.cpp \
  /home/dell/Desktop/Simulator//common.h \
  /home/dell/Desktop/Simulator//archiRegister.h \
  /home/dell/Desktop/Simulator//dependency.h \
+ /home/dell/Desktop/Simulator//reservationStation.h \
  /home/dell/Desktop/Simulator//registerDependency.h

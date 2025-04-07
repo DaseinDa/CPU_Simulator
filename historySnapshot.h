@@ -21,6 +21,7 @@ class HistorySnapshot {
         deque<Snapshot> history_snapshots;
     public:
         HistorySnapshot();
+        ~HistorySnapshot();
         Snapshot* findMatchingSnapshot(int instruction_number, int execution_count);
         void addSnapshot(Instruction bne_instruction);
         void predictionTrueFalseRecover(Instruction bne_instruction, bool actucalPrediction);

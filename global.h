@@ -17,6 +17,7 @@ class HistorySnapshot;//Forward declaration
 using namespace std;
 #include "archiRegister.h"
 #include "dependency.h"
+#include "reservationStation.h"
 extern unsigned int NF;
 extern unsigned int NI;
 extern unsigned int NW;
@@ -26,6 +27,7 @@ extern bool DebugMode;
 
 
 namespace Global {
+    extern int current_cycle;
     extern unordered_map<string, size_t> labelMap;
     extern unordered_map<int, double> memory_value;
     extern RegisterRenaming renaming_worker;
@@ -43,6 +45,19 @@ namespace Global {
     extern int renameStall;
     //依赖关系
     extern map<int,DependencyList> dependency_map;   
+    //ReservationStation
+    extern deque<ReservationStationEntry> RS_INT_Queue;
+    extern deque<ReservationStationEntry> RS_LOAD_Queue;
+    extern deque<ReservationStationEntry> RS_STORE_Queue;
+    extern deque<ReservationStationEntry> RS_FPadd_Queue;
+    extern deque<ReservationStationEntry> RS_FPmult_Queue;
+    extern deque<ReservationStationEntry> RS_FPdiv_Queue;
+    extern deque<ReservationStationEntry> RS_FPBU_Queue;
+
+    //Issue
+    extern deque<Instruction> issueInstructionQueue;
+    extern int rsFullNumber;//保留站满导致指令不能发射的次数，注意这不是stall cycle数
+    extern int stallCount_RSFull;
 }
 
 string getInstructionAddress(int instructionNumber);

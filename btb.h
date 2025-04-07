@@ -13,6 +13,7 @@ class BTB{
         bool BTB_HIT[MAX_BTB_SIZE]={1};
     public:
        unordered_map<int,tuple<int, int, BranchPredict>> btbMap;//索引，TAG(instructionNumber), target位置，分支预测器状态
+       BTB();
         ~BTB();
         int getTargetPosition(int instructionNumber);
         void update(int instructionNumber,bool taken);

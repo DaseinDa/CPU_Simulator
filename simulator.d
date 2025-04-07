@@ -12,6 +12,9 @@ obj/simulator.o: /home/dell/Desktop/Simulator//simulator.cpp \
  /home/dell/Desktop/Simulator//common.h \
  /home/dell/Desktop/Simulator//archiRegister.h \
  /home/dell/Desktop/Simulator//dependency.h \
+ /home/dell/Desktop/Simulator//reservationStation.h \
  /home/dell/Desktop/Simulator//fetch.h \
  /home/dell/Desktop/Simulator//historySnapshot.h \
- /home/dell/Desktop/Simulator//snapshotType.h
+ /home/dell/Desktop/Simulator//snapshotType.h \
+ /home/dell/Desktop/Simulator//decode.h \
+ /home/dell/Desktop/Simulator//issue.h

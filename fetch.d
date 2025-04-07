@@ -12,5 +12,6 @@ obj/fetch.o: /home/dell/Desktop/Simulator//fetch.cpp \
  /home/dell/Desktop/Simulator//common.h \
  /home/dell/Desktop/Simulator//archiRegister.h \
  /home/dell/Desktop/Simulator//dependency.h \
+ /home/dell/Desktop/Simulator//reservationStation.h \
  /home/dell/Desktop/Simulator//historySnapshot.h \
  /home/dell/Desktop/Simulator//snapshotType.h

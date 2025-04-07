@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string.h>
 #include<unistd.h>
-// #include "global.h"
+#include "global.h"
 #include "simulator.h"
 using namespace std;
 extern int optind,opterr,optopt;

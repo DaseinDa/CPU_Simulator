@@ -3,7 +3,9 @@
 HistorySnapshot::HistorySnapshot() {
     history_snapshots = deque<Snapshot>();
 }
-
+HistorySnapshot::~HistorySnapshot(){
+    cout<<"HistorySnapshot destructor called"<<endl;
+}
 void HistorySnapshot::addSnapshot(Instruction bne_instruction) {
     Snapshot snapshot;
     if(bne_instruction.opcode != InstructionType::bne) {

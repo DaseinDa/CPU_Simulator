@@ -2,6 +2,7 @@
 #include "instruction.h"
 void RegisterRenaming::initPhysicalRegs(){
     // $0 register is default always to save the 0 address in the whole process
+    cout<<"######initPhysicalRegs######"<<endl;
     physicalRegister[ZERO_REGISTER].value=0;
     physicalRegister[ZERO_REGISTER].isReady=true;
     for(int i=0; i<RESGITER_NUMBER;i++){
@@ -103,6 +104,7 @@ bool RegisterRenaming::instructionRegisterRenaming(Instruction& intr){
             break;
         case InstructionType::addi:
             if(!isPhysicalRegsAvailable()){
+                    cout<<"no physical register available for addi"<<endl;
                     return false;
             }else{
                 // The detination register of add is the first register
@@ -250,7 +252,11 @@ bool RegisterRenaming::instructionRegisterRenaming(Instruction& intr){
      }
 }
 string RegisterRenaming::getPhysicalRegID(string originRegName){
-    return registerRenamingMapping[originRegName];
+    if(registerRenamingMapping.count(originRegName)){
+        return registerRenamingMapping[originRegName];
+    }else{
+        throw runtime_error("Physical register not found: " + originRegName);
+    }
 }
 bool RegisterRenaming::isValidPhysicalRegister(string physicalRegisterName){
     // 检查格式是否为 "p" + 数字
@@ -282,25 +288,70 @@ bool RegisterRenaming::isValidPhysicalRegister(string physicalRegisterName){
 bool RegisterRenaming::QjQkVjVk(Instruction& instr) {
     string Qj;
     string Qk;
-    double Vj;
-    double Vk;
-    // Step 2: 设置 Vj/Qj
+    double Vj=0;
+    double Vk=0;
+    // fld和addi一样只有一个源操作数，的第二个操作数是源操作数。fsd要单独写，因为它第一个第二个都是源操作数
     if (Global::renaming_worker.registerRenamingMapping.count(instr.operands[1])) {
-        Qj = Global::renaming_worker.registerRenamingMapping[instr.operands[1]];  // 有依赖
+        string Qj_physical_reg;
+        if(instr.opcode==InstructionType::bne || instr.opcode==InstructionType::fsd){
+            Qj_physical_reg=Global::renaming_worker.registerRenamingMapping[instr.operands[0]];
+        }else{
+            Qj_physical_reg=Global::renaming_worker.registerRenamingMapping[instr.operands[1]];   
+        }
+
+        if(Global::renaming_worker.physicalRegister[Qj_physical_reg].isReady){
+            Qj="";
+            Vj=Global::renaming_worker.physicalRegister[Qj_physical_reg].value;
+        }else{
+            Qj = Qj_physical_reg;  // 有依赖
+        }
     } else {
-        Vj = Global::architectureRegisterFile[instr.operands[1]].value;
-        Qj = "";  // 就绪
+        if(instr.opcode==InstructionType::bne){
+            Vj = Global::architectureRegisterFile[instr.operands[0]].value;
+            Qj = "";  // 就绪
+        }else{
+            Vj = Global::architectureRegisterFile[instr.operands[1]].value;
+            Qj = "";  // 就绪
+        }
+
     }
 
     // Step 3: 设置 Vk/Qk（双操作数指令才需要）
-    if (instr.opcode == InstructionType::add || instr.opcode == InstructionType::fsub || instr.opcode == InstructionType::fmul || instr.opcode == InstructionType::fdiv) {
+    if (instr.opcode == InstructionType::add ||instr.opcode == InstructionType::slt || instr.opcode == InstructionType::fadd || instr.opcode == InstructionType::fsub || instr.opcode == InstructionType::fmul || instr.opcode == InstructionType::fdiv) {
         if (Global::renaming_worker.registerRenamingMapping.count(instr.operands[2])) {
-            Qk = Global::renaming_worker.registerRenamingMapping[instr.operands[2]];
+            string Qk_physical_reg=Global::renaming_worker.registerRenamingMapping[instr.operands[2]];
+            if(Global::renaming_worker.physicalRegister[Qk_physical_reg].isReady){
+                Qk="";
+                Vk=Global::renaming_worker.physicalRegister[Qk_physical_reg].value;
+            }else{
+                Qk = Global::renaming_worker.registerRenamingMapping[instr.operands[2]];  // 有依赖
+            }
         } else{
             Vk = Global::architectureRegisterFile[instr.operands[2]].value;
             Qk = "";
         } 
-    } 
+    }
+
+
+    if (instr.opcode == InstructionType::bne || instr.opcode == InstructionType::fsd) {
+        if (Global::renaming_worker.registerRenamingMapping.count(instr.operands[1])) {
+            string Qk_physical_reg=Global::renaming_worker.registerRenamingMapping[instr.operands[1]];
+            if(Global::renaming_worker.physicalRegister[Qk_physical_reg].isReady){
+                Qk="";
+                Vk=Global::renaming_worker.physicalRegister[Qk_physical_reg].value;
+            }else{
+                Qk = Global::renaming_worker.registerRenamingMapping[instr.operands[1]];  // 有依赖
+            }
+        } else{
+            Vk = Global::architectureRegisterFile[instr.operands[1]].value;
+            Qk = "";
+        } 
+    }
+
+    // if(instr.opcode==InstructionType::addi){
+    //     Qk="";
+    //     Vk=instr.immediate.value();
+    // }
     instr.Qj=Qj;
     instr.Qk=Qk;
     instr.Vj=Vj;

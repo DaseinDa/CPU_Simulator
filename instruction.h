@@ -21,7 +21,7 @@ class Instruction{
 public:
     InstructionType opcode;
     vector<string> operands;
-    optional<int> immediate;
+    optional<double> immediate;
     optional<string> label;
     optional<string> target;
     int executionCount=0;
@@ -31,8 +31,8 @@ public:
     optional<int> status_in_Queue;
     string Qj;
     string Qk;
-    double Vj;
-    double Vk;
+    double Vj=0;
+    double Vk=0;
     // Instruction(){};
     Instruction() {};
     Instruction(InstructionType op, const std::vector<std::string>& ops,

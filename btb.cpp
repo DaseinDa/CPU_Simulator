@@ -1,6 +1,8 @@
 #include "btb.h"
 #include "global.h"
-
+BTB::BTB(){
+    cout<<"######BTB constructor called#########"<<endl;
+}
 BTB::~BTB() {cout<<"BTB destructor called"<<endl;}
 //Tag is the instruction number
 void BTB::update(int instructionNumber,bool taken){//在实际bne execute period 分支预测结果出来后使用

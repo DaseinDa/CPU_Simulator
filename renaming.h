@@ -30,7 +30,8 @@ class RegisterRenaming{
         // //history只有在bne才用得到
         // deque<unordered_map<string, string>> mappingTableHistory;//记录历史的寄存器重命名关系
         // deque<deque<string>> freeListHistory;
-        ~RegisterRenaming(){initPhysicalRegs();};
+        RegisterRenaming(){initPhysicalRegs();};
+        ~RegisterRenaming(){};//代表执行完以后回收
         bool QjQkVjVk(Instruction& instr);
         void initPhysicalRegs();
         bool instructionRegisterRenaming(Instruction& intr);

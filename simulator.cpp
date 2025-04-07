@@ -1,7 +1,9 @@
 #include "simulator.h"
 
 const char COMMENT_LINE_PREFIX = '%';
-
+Simulator::Simulator(){
+    cout<<"Simulator constructor called"<<endl;
+}
 bool isCommentLine(const string line) {
     return line[0] == COMMENT_LINE_PREFIX;
 }
@@ -158,7 +160,11 @@ void Simulator::pipelineGlobalCycle(){
     if(Global::instructionset.empty()){
         cout<<"-------------------instructionset fail to copy-----------"<<endl;
     }
+
+    this->d= new Decode();
     this->f= new Fetch();
+    this->i= new Issue();
+
     //commit
     //write back
     //memory access
@@ -167,4 +173,6 @@ void Simulator::pipelineGlobalCycle(){
     //fetch一个cycle只能fetch 4个instruction,fetech不分发是否应该统计为stall
     //fetch最后执行因为需要先检查更早执行的指令是不是先能进入下一个状态释放出早期执行的资源
     if(!f->dispatch()) fetchStall++;
+    if(!d->dispatch()) decodeStall++;
+    if(!i->issue()) issueStall++;
 }
