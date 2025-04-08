@@ -44,6 +44,7 @@ string RegisterRenaming::allocatePhysicalReg(string originRegName, bool isDesReg
         }else{//如果是源寄存器，而且不存在映射，说明直接读取ready的架构寄存器值，而且本身的物理寄存器也是ready的
             physicalRegister[freeReg].isReady=true;
             physicalRegister[freeReg].value=Global::architectureRegisterFile[originRegName].value;
+            //天然如果第一次出现，自动添加到architectureRegisterFile且初始值为0
         }
 
         return freeReg;
@@ -372,7 +373,7 @@ void RegisterRenaming::printRegisterRenamingMapping() {
     for (const auto& pair : registerRenamingMapping) {
         std::cout << "Architectural Register: " << pair.first 
                   << " -> Physical Register: " << pair.second 
-                  <<"Status: "<< (physicalRegister[pair.second].isReady ? "READY" : "NOT READY");
+                  <<"  Status: "<< (physicalRegister[pair.second].isReady ? "READY" : "NOT READY");
                 // if (physicalRegister[pair.second].isReady) {
                     std::cout << " Value: " << physicalRegister[pair.second].value;
                 // }

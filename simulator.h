@@ -12,6 +12,7 @@
 #include "fetch.h"
 #include "decode.h"
 #include "issue.h"
+#include "execute.h"
 #include "btb.h"
 #include "instruction.h"
 using namespace std;
@@ -56,6 +57,7 @@ class Simulator{
     Fetch *f;
     Decode *d;
     Issue *i;
+    Execute *e;
     //execute
     void execute();
     void commitInstruction();

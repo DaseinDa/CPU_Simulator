@@ -15,7 +15,7 @@
 #define UNIT_FPADD_NUMBER 1
 #define UNIT_FPMULT_NUMBER 1
 #define UNIT_FPDIV_NUMBER 1
-#define UNIT_FPBU_NUMBER 1
+#define UNIT_BU_NUMBER 1
 enum InstructionStatus{
     FETCH,
     DECODE,

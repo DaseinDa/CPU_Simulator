@@ -22,9 +22,10 @@ class HistorySnapshot {
     public:
         HistorySnapshot();
         ~HistorySnapshot();
-        Snapshot* findMatchingSnapshot(int instruction_number, int execution_count);
+        Snapshot* findMatchingSnapshot(int ID_in_Queue);
         void addSnapshot(Instruction bne_instruction);
         void predictionTrueFalseRecover(Instruction bne_instruction, bool actucalPrediction);
         void printHistory();
         void printSnapshot(const Snapshot snapshot);
+        void clearHistoryAfter(int ID_in_Queue);
 };

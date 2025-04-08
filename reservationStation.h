@@ -27,6 +27,7 @@ struct ReservationStationEntry {
     int ID_in_Queue;    // 可选：指向原始指令对象（方便调试/追踪）
 
     variant<monostate,int,double,bool,string> result;
+    optional<bool> predictTrueFalse;  
     //检查结果是否计算完成，如果没计算完成返回值是空的bool has_result = !std::holds_alternative<std::monostate>(entry.result);
 
 };

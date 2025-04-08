@@ -14,4 +14,6 @@ obj/execute.o: /home/dell/Desktop/Simulator//execute.cpp \
  /home/dell/Desktop/Simulator//renaming.h \
  /home/dell/Desktop/Simulator//dependency.h \
  /home/dell/Desktop/Simulator//ROB.h \
- /home/dell/Desktop/Simulator//unit_pip.h
+ /home/dell/Desktop/Simulator//unit_pip.h \
+ /home/dell/Desktop/Simulator//historySnapshot.h \
+ /home/dell/Desktop/Simulator//snapshotType.h

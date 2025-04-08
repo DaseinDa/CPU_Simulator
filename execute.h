@@ -8,16 +8,18 @@
 #include "instruction_type.h"
 #include "unit_pip.h"
 #include "common.h"
+#include "historySnapshot.h"
 using namespace std;
 class Execute{
     public:
-    void execute();
+    bool execute();
     void executeINT();
     void executeLOAD();
     void executeSTORE();
     void executeFPADD();
     void executeFPMULT();
     void executeFPDIV();
-    void executeFPBU();
+    bool executeBU(int earliest_ID_in_Queue);
     void insertCompletedEntry(const ReservationStationEntry& entry);
+    int getEarliestIDIn_RS_BU_Queue();
 };

@@ -72,8 +72,8 @@ void Issue::issue(){
                 }
                 break;
             case InstructionType::bne:
-                if(Global::RS_FPBU_Queue.size()<RS_FPBU_SIZE){
-                    cout<<"Issue: RS_FPBU is full"<<endl;
+                if(Global::RS_BU_Queue.size()<RS_FPBU_SIZE){
+                    cout<<"Issue: RS_BU is full"<<endl;
                     rsStallThisCycle=true;
                     Global::rsFullNumber++;  
                 }
@@ -150,7 +150,7 @@ void Issue::insert2RS(ReservationStationEntry& rs_entry){
             case InstructionType::fdiv:
                     Global::RS_FPdiv_Queue.push_back(rs_entry);
             case InstructionType::bne:
-                    Global::RS_FPBU_Queue.push_back(rs_entry);
+                    Global::RS_BU_Queue.push_back(rs_entry);
             default:
                 cout<<"Issue: Unknown instruction"<<endl;
                 Global::rsFullNumber++;

@@ -164,7 +164,7 @@ void Simulator::pipelineGlobalCycle(){
     this->d= new Decode();
     this->f= new Fetch();
     this->i= new Issue();
-
+    this->e= new Execute();
     //commit
     //write back
     //memory access
@@ -175,4 +175,5 @@ void Simulator::pipelineGlobalCycle(){
     if(!f->fetch()) fetchStall++;
     if(!d->decode()) decodeStall++;
     i->issue();
+    e->execute();
 }

@@ -25,7 +25,7 @@ namespace Global {
     deque<ReservationStationEntry> RS_FPadd_Queue;
     deque<ReservationStationEntry> RS_FPmult_Queue;
     deque<ReservationStationEntry> RS_FPdiv_Queue;
-    deque<ReservationStationEntry> RS_FPBU_Queue;
+    deque<ReservationStationEntry> RS_BU_Queue;
     int rsFullNumber=0;
     int stallCount_RSFull=0;
     //ROB
@@ -40,7 +40,7 @@ namespace Global {
     deque<PipelineStage> FPadd_pipeline;
     deque<PipelineStage> FPmult_pipeline;
     deque<PipelineStage> FPdiv_pipeline;
-    deque<PipelineStage> FPBU_pipeline;
+    deque<PipelineStage> BU_pipeline;
     //完成计算的指令
     vector<ReservationStationEntry> completeRSQueue;
 }

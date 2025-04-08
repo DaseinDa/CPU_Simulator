@@ -56,7 +56,7 @@ namespace Global {
     extern deque<ReservationStationEntry> RS_FPadd_Queue;
     extern deque<ReservationStationEntry> RS_FPmult_Queue;
     extern deque<ReservationStationEntry> RS_FPdiv_Queue;
-    extern deque<ReservationStationEntry> RS_FPBU_Queue;
+    extern deque<ReservationStationEntry> RS_BU_Queue;
 
 
     extern int rsFullNumber;//保留站满导致指令不能发射的次数，注意这不是stall cycle数
@@ -74,7 +74,7 @@ namespace Global {
     extern deque<PipelineStage> FPadd_pipeline;
     extern deque<PipelineStage> FPmult_pipeline;
     extern deque<PipelineStage> FPdiv_pipeline;
-    extern deque<PipelineStage> FPBU_pipeline;
+    extern deque<PipelineStage> BU_pipeline;
     //完成计算的指令,等待写CDB,ROB
     extern vector<ReservationStationEntry> completeRSQueue;
 }
