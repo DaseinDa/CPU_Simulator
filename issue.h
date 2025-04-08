@@ -4,6 +4,7 @@
 #include "common.h"
 #include "global.h"
 #include "unit.h"
+#include "ROB.h"
 
 
 
@@ -13,5 +14,6 @@ class Issue{
     public:
         Issue();
         ~Issue();
-        bool issue();
+        void issue();
+        void insert2RS(ReservationStationEntry& rs_entry);
 };

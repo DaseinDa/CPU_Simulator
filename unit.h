@@ -13,6 +13,7 @@
 #define FPdivLatency 6
 #define BULatency 1
 
+
 class Unit{
     private:
         UnitType unit_function;//代表这个Unit是哪个单元

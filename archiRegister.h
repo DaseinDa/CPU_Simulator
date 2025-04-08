@@ -1,5 +1,6 @@
 #pragma once
 #include "common.h"
+#include <deque>
 using namespace std;
 class ArchitectureRegister{
     public:

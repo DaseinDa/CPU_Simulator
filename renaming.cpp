@@ -20,6 +20,8 @@ bool RegisterRenaming::isPhysicalRegsAvailable(){
     return !(RegisterRenamingFreeList.empty());
 }
 string RegisterRenaming::allocatePhysicalReg(string originRegName, bool isDesReg){
+    printRegisterRenamingMapping();
+    cout<<"Renaming...Distribute physical register..."<<endl;
     if(originRegName==ZERO_REGISTER){
         return ZERO_REGISTER;
     }else if(registerRenamingMapping.count(originRegName)){//是不是已经包含在之前的mapping里了，如果包含且不是destination register就不用分配寄存器，用之前mapping的分配就可以
@@ -27,7 +29,9 @@ string RegisterRenaming::allocatePhysicalReg(string originRegName, bool isDesReg
             return registerRenamingMapping[originRegName];//不做任何改变
         }
     }else{
+
         string freeReg = RegisterRenamingFreeList.front();
+        //freeReg是物理寄存器名
         RegisterRenamingFreeList.pop_front();
         registerRenamingMapping[originRegName]=freeReg;
         if(!isValidPhysicalRegister(freeReg)){
@@ -53,16 +57,16 @@ bool RegisterRenaming::instructionRegisterRenaming(Instruction& intr){
             if(!isPhysicalRegsAvailable()){
                     return false;
             }else{
-                //The detination register of fld is the first register
-                allocate_phyreg=allocatePhysicalReg(intr.operands[0],true);
-                intr.operands[0]=allocate_phyreg;
-                physicalRegister[allocate_phyreg].isReady=false;
+                allocate_phyreg=allocatePhysicalReg(intr.operands[1],false);
+                intr.operands[1]=allocate_phyreg;
             }
             if(!isPhysicalRegsAvailable()){
                     return false;
             }else{
-                allocate_phyreg=allocatePhysicalReg(intr.operands[1],false);
-                intr.operands[1]=allocate_phyreg;
+                //The detination register of fld is the first register
+                allocate_phyreg=allocatePhysicalReg(intr.operands[0],true);
+                intr.operands[0]=allocate_phyreg;
+                physicalRegister[allocate_phyreg].isReady=false;
             }
             break;
         case InstructionType::fsd:
@@ -84,14 +88,6 @@ bool RegisterRenaming::instructionRegisterRenaming(Instruction& intr){
             if(!isPhysicalRegsAvailable()){
                     return false;
             }else{
-                // The detination register of add is the first register
-                allocate_phyreg=allocatePhysicalReg(intr.operands[0],true);
-                intr.operands[0]=allocate_phyreg;
-                physicalRegister[allocate_phyreg].isReady=false;
-            }
-            if(!isPhysicalRegsAvailable()){
-                    return false;
-            }else{
                 allocate_phyreg=allocatePhysicalReg(intr.operands[1],false);
                 intr.operands[1]=allocate_phyreg;
             }
@@ -101,8 +97,23 @@ bool RegisterRenaming::instructionRegisterRenaming(Instruction& intr){
                 allocate_phyreg=allocatePhysicalReg(intr.operands[2],false);
                 intr.operands[2]=allocate_phyreg;
             }
+            if(!isPhysicalRegsAvailable()){
+                    return false;
+            }else{
+                // The detination register of add is the first register
+                allocate_phyreg=allocatePhysicalReg(intr.operands[0],true);
+                intr.operands[0]=allocate_phyreg;
+                physicalRegister[allocate_phyreg].isReady=false;
+            }
             break;
         case InstructionType::addi:
+            if(!isPhysicalRegsAvailable()){
+                    return false;
+            }else{
+                allocate_phyreg=allocatePhysicalReg(intr.operands[1],false);
+                cout<<"####################"<<endl;
+                intr.operands[1]=allocate_phyreg;
+            }
             if(!isPhysicalRegsAvailable()){
                     cout<<"no physical register available for addi"<<endl;
                     return false;
@@ -112,22 +123,8 @@ bool RegisterRenaming::instructionRegisterRenaming(Instruction& intr){
                 intr.operands[0]=allocate_phyreg;
                 physicalRegister[allocate_phyreg].isReady=false;
             }
-            if(!isPhysicalRegsAvailable()){
-                    return false;
-            }else{
-                allocate_phyreg=allocatePhysicalReg(intr.operands[1],false);
-                intr.operands[1]=allocate_phyreg;
-            }
             break;
         case InstructionType::slt:
-            if(!isPhysicalRegsAvailable()){
-                    return false;
-            }else{
-                // The detination register of add is the first register
-                allocate_phyreg=allocatePhysicalReg(intr.operands[0],true);
-                intr.operands[0]=allocate_phyreg;
-                physicalRegister[allocate_phyreg].isReady=false;
-            }
             if(!isPhysicalRegsAvailable()){
                     return false;
             }else{
@@ -139,20 +136,20 @@ bool RegisterRenaming::instructionRegisterRenaming(Instruction& intr){
             }else{
                 allocate_phyreg=allocatePhysicalReg(intr.operands[2],false);
                 intr.operands[2]=allocate_phyreg;
+            }
+            if(!isPhysicalRegsAvailable()){
+                    return false;
+            }else{
+                // The detination register of add is the first register
+                allocate_phyreg=allocatePhysicalReg(intr.operands[0],true);
+                intr.operands[0]=allocate_phyreg;
+                physicalRegister[allocate_phyreg].isReady=false;
             }
             break;
         case InstructionType::fadd:
             if(!isPhysicalRegsAvailable()){
                     return false;
             }else{
-                // The detination register of add is the first register
-                allocate_phyreg=allocatePhysicalReg(intr.operands[0],true);
-                intr.operands[0]=allocate_phyreg;
-                physicalRegister[allocate_phyreg].isReady=false;
-            }
-            if(!isPhysicalRegsAvailable()){
-                    return false;
-            }else{
                 allocate_phyreg=allocatePhysicalReg(intr.operands[1],false);
                 intr.operands[1]=allocate_phyreg;
             }
@@ -161,20 +158,20 @@ bool RegisterRenaming::instructionRegisterRenaming(Instruction& intr){
             }else{
                 allocate_phyreg=allocatePhysicalReg(intr.operands[2],false);
                 intr.operands[2]=allocate_phyreg;
+            }
+            if(!isPhysicalRegsAvailable()){
+                    return false;
+            }else{
+                // The detination register of add is the first register
+                allocate_phyreg=allocatePhysicalReg(intr.operands[0],true);
+                intr.operands[0]=allocate_phyreg;
+                physicalRegister[allocate_phyreg].isReady=false;
             }
             break;
         case InstructionType::fsub:
             if(!isPhysicalRegsAvailable()){
                     return false;
             }else{
-                // The detination register of add is the first register
-                allocate_phyreg=allocatePhysicalReg(intr.operands[0],true);
-                intr.operands[0]=allocate_phyreg;
-                physicalRegister[allocate_phyreg].isReady=false;
-            }
-            if(!isPhysicalRegsAvailable()){
-                    return false;
-            }else{
                 allocate_phyreg=allocatePhysicalReg(intr.operands[1],false);
                 intr.operands[1]=allocate_phyreg;
             }
@@ -183,20 +180,20 @@ bool RegisterRenaming::instructionRegisterRenaming(Instruction& intr){
             }else{
                 allocate_phyreg=allocatePhysicalReg(intr.operands[2],false);
                 intr.operands[2]=allocate_phyreg;
+            }
+            if(!isPhysicalRegsAvailable()){
+                    return false;
+            }else{
+                // The detination register of add is the first register
+                allocate_phyreg=allocatePhysicalReg(intr.operands[0],true);
+                intr.operands[0]=allocate_phyreg;
+                physicalRegister[allocate_phyreg].isReady=false;
             }
             break;
         case InstructionType::fmul:
             if(!isPhysicalRegsAvailable()){
                     return false;
             }else{
-                // The detination register of add is the first register
-                allocate_phyreg=allocatePhysicalReg(intr.operands[0],true);
-                intr.operands[0]=allocate_phyreg;
-                physicalRegister[allocate_phyreg].isReady=false;
-            }
-            if(!isPhysicalRegsAvailable()){
-                    return false;
-            }else{
                 allocate_phyreg=allocatePhysicalReg(intr.operands[1],false);
                 intr.operands[1]=allocate_phyreg;
             }
@@ -205,20 +202,20 @@ bool RegisterRenaming::instructionRegisterRenaming(Instruction& intr){
             }else{
                 allocate_phyreg=allocatePhysicalReg(intr.operands[2],false);
                 intr.operands[2]=allocate_phyreg;
+            }
+            if(!isPhysicalRegsAvailable()){
+                    return false;
+            }else{
+                // The detination register of add is the first register
+                allocate_phyreg=allocatePhysicalReg(intr.operands[0],true);
+                intr.operands[0]=allocate_phyreg;
+                physicalRegister[allocate_phyreg].isReady=false;
             }
             break;
         case InstructionType::fdiv:
             if(!isPhysicalRegsAvailable()){
                     return false;
             }else{
-                // The detination register of add is the first register
-                allocate_phyreg=allocatePhysicalReg(intr.operands[0],true);
-                intr.operands[0]=allocate_phyreg;
-                physicalRegister[allocate_phyreg].isReady=false;
-            }
-            if(!isPhysicalRegsAvailable()){
-                    return false;
-            }else{
                 allocate_phyreg=allocatePhysicalReg(intr.operands[1],false);
                 intr.operands[1]=allocate_phyreg;
             }
@@ -227,6 +224,14 @@ bool RegisterRenaming::instructionRegisterRenaming(Instruction& intr){
             }else{
                 allocate_phyreg=allocatePhysicalReg(intr.operands[2],false);
                 intr.operands[2]=allocate_phyreg;
+            }
+            if(!isPhysicalRegsAvailable()){
+                    return false;
+            }else{
+                // The detination register of add is the first register
+                allocate_phyreg=allocatePhysicalReg(intr.operands[0],true);
+                intr.operands[0]=allocate_phyreg;
+                physicalRegister[allocate_phyreg].isReady=false;
             }
             break;
         case InstructionType::bne:
@@ -286,19 +291,21 @@ bool RegisterRenaming::isValidPhysicalRegister(string physicalRegisterName){
 
 
 bool RegisterRenaming::QjQkVjVk(Instruction& instr) {
+    //因为QjQkVjVk在renaming之前执行，所以传过来的是全部是架构寄存器
     string Qj;
     string Qk;
     double Vj=0;
     double Vk=0;
     // fld和addi一样只有一个源操作数，的第二个操作数是源操作数。fsd要单独写，因为它第一个第二个都是源操作数
-    if (Global::renaming_worker.registerRenamingMapping.count(instr.operands[1])) {
-        string Qj_physical_reg;
-        if(instr.opcode==InstructionType::bne || instr.opcode==InstructionType::fsd){
-            Qj_physical_reg=Global::renaming_worker.registerRenamingMapping[instr.operands[0]];
-        }else{
-            Qj_physical_reg=Global::renaming_worker.registerRenamingMapping[instr.operands[1]];   
-        }
+    string Qj_archchi_reg;
+    if(instr.opcode==InstructionType::bne || instr.opcode==InstructionType::fsd){
+        Qj_archchi_reg=instr.operands[0];
+    }else{
+        Qj_archchi_reg=instr.operands[1];   
+    }
 
+    if (Global::renaming_worker.registerRenamingMapping.count(Qj_archchi_reg)) {
+        string Qj_physical_reg=Global::renaming_worker.registerRenamingMapping[Qj_archchi_reg];
         if(Global::renaming_worker.physicalRegister[Qj_physical_reg].isReady){
             Qj="";
             Vj=Global::renaming_worker.physicalRegister[Qj_physical_reg].value;
@@ -307,10 +314,10 @@ bool RegisterRenaming::QjQkVjVk(Instruction& instr) {
         }
     } else {
         if(instr.opcode==InstructionType::bne){
-            Vj = Global::architectureRegisterFile[instr.operands[0]].value;
+            Vj = Global::architectureRegisterFile[Qj_archchi_reg].value;
             Qj = "";  // 就绪
         }else{
-            Vj = Global::architectureRegisterFile[instr.operands[1]].value;
+            Vj = Global::architectureRegisterFile[Qj_archchi_reg].value;
             Qj = "";  // 就绪
         }
 
@@ -340,7 +347,7 @@ bool RegisterRenaming::QjQkVjVk(Instruction& instr) {
                 Qk="";
                 Vk=Global::renaming_worker.physicalRegister[Qk_physical_reg].value;
             }else{
-                Qk = Global::renaming_worker.registerRenamingMapping[instr.operands[1]];  // 有依赖
+                Qk = Qk_physical_reg;  // 有依赖
             }
         } else{
             Vk = Global::architectureRegisterFile[instr.operands[1]].value;
@@ -357,4 +364,21 @@ bool RegisterRenaming::QjQkVjVk(Instruction& instr) {
     instr.Vj=Vj;
     instr.Vk=Vk;
     return true;
+}
+
+void RegisterRenaming::printRegisterRenamingMapping() {
+    std::cout << "Register Renaming Mapping:" << std::endl;
+    std::cout << "------------------------" << std::endl;
+    for (const auto& pair : registerRenamingMapping) {
+        std::cout << "Architectural Register: " << pair.first 
+                  << " -> Physical Register: " << pair.second 
+                  <<"Status: "<< (physicalRegister[pair.second].isReady ? "READY" : "NOT READY");
+                // if (physicalRegister[pair.second].isReady) {
+                    std::cout << " Value: " << physicalRegister[pair.second].value;
+                // }
+                std::cout << endl;
+    }
+    
+    std::cout << "------------------------" << std::endl;
+    std::cout << "Total mappings: " << registerRenamingMapping.size() << std::endl;
 }

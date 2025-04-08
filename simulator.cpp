@@ -172,7 +172,7 @@ void Simulator::pipelineGlobalCycle(){
     //decode+issue
     //fetch一个cycle只能fetch 4个instruction,fetech不分发是否应该统计为stall
     //fetch最后执行因为需要先检查更早执行的指令是不是先能进入下一个状态释放出早期执行的资源
-    if(!f->dispatch()) fetchStall++;
-    if(!d->dispatch()) decodeStall++;
-    if(!i->issue()) issueStall++;
+    if(!f->fetch()) fetchStall++;
+    if(!d->decode()) decodeStall++;
+    i->issue();
 }

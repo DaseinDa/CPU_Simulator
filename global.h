@@ -7,6 +7,7 @@
 #include <deque>
 #include <optional>
 #include <sstream>
+#include "common.h"
 #include "BranchPredictStage.h"
 class BTB;//Forward declaration
 #include "btb.h"
@@ -18,6 +19,8 @@ using namespace std;
 #include "archiRegister.h"
 #include "dependency.h"
 #include "reservationStation.h"
+#include "ROB.h"
+#include "unit_pip.h"
 extern unsigned int NF;
 extern unsigned int NI;
 extern unsigned int NW;
@@ -45,6 +48,7 @@ namespace Global {
     extern int renameStall;
     //依赖关系
     extern map<int,DependencyList> dependency_map;   
+
     //ReservationStation
     extern deque<ReservationStationEntry> RS_INT_Queue;
     extern deque<ReservationStationEntry> RS_LOAD_Queue;
@@ -54,10 +58,25 @@ namespace Global {
     extern deque<ReservationStationEntry> RS_FPdiv_Queue;
     extern deque<ReservationStationEntry> RS_FPBU_Queue;
 
-    //Issue
-    extern deque<Instruction> issueInstructionQueue;
+
     extern int rsFullNumber;//保留站满导致指令不能发射的次数，注意这不是stall cycle数
     extern int stallCount_RSFull;
+    //ROB
+    extern int stallCount_ROBFull;
+    extern int robHead;
+    extern int robTail;
+    extern vector<ROBEntry> ROBuffer;
+
+    //unit pipeline
+    extern deque<PipelineStage> INT_pipeline;
+    extern deque<PipelineStage> LOAD_pipeline;
+    extern deque<PipelineStage> STORE_pipeline;
+    extern deque<PipelineStage> FPadd_pipeline;
+    extern deque<PipelineStage> FPmult_pipeline;
+    extern deque<PipelineStage> FPdiv_pipeline;
+    extern deque<PipelineStage> FPBU_pipeline;
+    //完成计算的指令,等待写CDB,ROB
+    extern vector<ReservationStationEntry> completeRSQueue;
 }
 
 string getInstructionAddress(int instructionNumber);

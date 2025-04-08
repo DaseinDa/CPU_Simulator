@@ -4,7 +4,7 @@ Fetch::Fetch(){
         };
 
 
-bool Fetch::dispatch(){
+bool Fetch::fetch(){
     cout<<"fetch dispatching..., nf="<<nf<<endl;
     if(Global::fetchInstructionQueue.size()>=nf){
         return false;//如果已经没有空余bandwidth,什么都不fetch,count as a stall
@@ -17,12 +17,12 @@ bool Fetch::dispatch(){
                 cout<<"All instructions have been taken in the pipeline"<<endl;
                 return true;
         }else{ 
-            fetch();//for 循环中不能return,否则剩下的bandwidth没有做fetch
+            fetchInstruction();//for 循环中不能return,否则剩下的bandwidth没有做fetch
         }
     }
     return (Global::instructionset.empty()|| startFetchQueueSize==0);//既没有取完，又存在之前的指令stall了
 }
-void Fetch::fetch(){
+void Fetch::fetchInstruction(){
     Global::instructionset[Global::fetch_pointer].fetchExecutionCount();
     Instruction fetch_intr = Global::instructionset[Global::fetch_pointer];
     fetch_intr.ID_in_Queue=Global::instructionQueue.size();

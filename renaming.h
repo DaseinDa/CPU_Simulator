@@ -40,4 +40,5 @@ class RegisterRenaming{
         bool isValidPhysicalRegister(string physicalRegisterName);
         string allocatePhysicalReg(string originRegName, bool isDesReg);
         string getPhysicalRegID(string originRegName);//根据寄存器名字得到对应的物理寄存器号
+        void printRegisterRenamingMapping();
 };

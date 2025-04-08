@@ -7,7 +7,7 @@ Decode::Decode() {
 Decode::~Decode() {
     // Destructor implementation - clean up any resources
 }
-bool Decode::dispatch(){
+bool Decode::decode(){
     if(Global::decodeInstructionQueue.size()>=ni){
         return false;//没有任何capacity可以dispatch不做任何操作
     }
@@ -21,6 +21,7 @@ bool Decode::dispatch(){
         //开始decode
         Instruction decode_instruction=Global::fetchInstructionQueue.front();//already with ID in Queue
         // I should read Qj,Qk,Vj,Vk from current RAT firstly before rename
+        Global::renaming_worker.printRegisterRenamingMapping();
         Global::renaming_worker.QjQkVjVk(decode_instruction);
         //输出decode_instruction
         decode_instruction.print();

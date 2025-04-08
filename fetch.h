@@ -19,8 +19,8 @@ class Fetch{
         // int fetch_pointer=0;
         //fetch to condition out-order branch prediction
     public:
-        bool dispatch();
-        void fetch();
+        bool fetch();
+        void fetchInstruction();
     Fetch(const Fetch&) = delete;
     Fetch& operator=(const Fetch&) = delete;
     Fetch(Fetch&&) = delete;             // 禁用移动构造

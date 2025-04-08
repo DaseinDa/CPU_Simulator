@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string.h>
+#include <vector>
 #include<unistd.h>
 #include "global.h"
 #include "simulator.h"
@@ -52,6 +53,7 @@ int main(int argc, char *argv[])
                 break;
         }    
     }
+    Global::ROBuffer = vector<ROBEntry>(NR);
     Simulator simulator;
     simulator.ReadAssemblyFile("assembly.dat");
     simulator.pipelineGlobalCycle();

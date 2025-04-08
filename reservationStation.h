@@ -1,7 +1,8 @@
 #pragma once
 #include <string>
+#include <variant>
 #include <vector>
-#include "instruction.h"
+#include <optional>
 #include "instruction_type.h"
 #include "archiRegister.h"
 using namespace std;
@@ -14,7 +15,8 @@ struct ReservationStationEntry {
     string Qj="";        // 操作数1依赖的ROB/tag（如果未就绪）初始化为未就绪
     string Qk="";        // 操作数2依赖的ROB/tag（如果未就绪）
 
-    string dest="";      // 目的寄存器/ROB条目标识符（写结果去哪里）
+    string destPhysicalRegister="";      // 目的寄存器/ROB条目标识符（写结果去哪里）
+    string destROB="";      // 目的寄存器/ROB条目标识符（写结果去哪里）
 
     int latency = 0;       // 执行所需时钟周期（用于多周期指令）
     int issueCycle = -1;   // 指令被调度的周期（用于统计和调试）
@@ -23,6 +25,9 @@ struct ReservationStationEntry {
     optional<int> A;//immediate number
 
     int ID_in_Queue;    // 可选：指向原始指令对象（方便调试/追踪）
+
+    variant<monostate,int,double,bool,string> result;
+    //检查结果是否计算完成，如果没计算完成返回值是空的bool has_result = !std::holds_alternative<std::monostate>(entry.result);
 
 };
 
@@ -119,3 +124,4 @@ struct ReservationStationEntry {
 
 //     return true;
 // }
+

@@ -1,0 +1,75 @@
+Date : 2025-04-07 05:42:04
+Directory : /home/dell/Desktop/Simulator
+Total : 50 files,  1635 codes, 444 comments, 163 blanks, all 2242 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| C++      |         49 |      1,600 |        423 |        150 |      2,173 |
+| Makefile |          1 |         35 |         21 |         13 |         69 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                   |         50 |      1,635 |        444 |        163 |      2,242 |
++-----------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                            | language | code       | comment    | blank      | total      |
++-----------------------------------------------------+----------+------------+------------+------------+------------+
+| /home/dell/Desktop/Simulator/BranchPredictStage.cpp | C++      |          6 |          0 |          1 |          7 |
+| /home/dell/Desktop/Simulator/BranchPredictStage.h   | C++      |          9 |          0 |          0 |          9 |
+| /home/dell/Desktop/Simulator/Makefile               | Makefile |         35 |         21 |         13 |         69 |
+| /home/dell/Desktop/Simulator/ROB.cpp                | C++      |          0 |          0 |          1 |          1 |
+| /home/dell/Desktop/Simulator/ROB.h                  | C++      |         11 |          0 |          0 |         11 |
+| /home/dell/Desktop/Simulator/archiRegister.h        | C++      |         10 |          0 |          0 |         10 |
+| /home/dell/Desktop/Simulator/assembly.dat           | C++      |         23 |          0 |          0 |         23 |
+| /home/dell/Desktop/Simulator/branchPrediction.cpp   | C++      |         36 |          2 |          3 |         41 |
+| /home/dell/Desktop/Simulator/branchPrediction.h     | C++      |         13 |          1 |          0 |         14 |
+| /home/dell/Desktop/Simulator/btb.cpp                | C++      |         58 |         13 |          2 |         73 |
+| /home/dell/Desktop/Simulator/btb.h                  | C++      |         19 |          3 |          1 |         23 |
+| /home/dell/Desktop/Simulator/commit.cpp             | C++      |          0 |          0 |          1 |          1 |
+| /home/dell/Desktop/Simulator/commit.h               | C++      |          0 |          0 |          1 |          1 |
+| /home/dell/Desktop/Simulator/common.h               | C++      |         18 |          0 |          0 |         18 |
+| /home/dell/Desktop/Simulator/decode.cpp             | C++      |         32 |         13 |          2 |         47 |
+| /home/dell/Desktop/Simulator/decode.h               | C++      |         13 |          1 |          1 |         15 |
+| /home/dell/Desktop/Simulator/dependency.h           | C++      |         14 |          6 |          2 |         22 |
+| /home/dell/Desktop/Simulator/execute.cpp            | C++      |          0 |          0 |          1 |          1 |
+| /home/dell/Desktop/Simulator/execute.h              | C++      |          0 |          0 |          1 |          1 |
+| /home/dell/Desktop/Simulator/fetch.cpp              | C++      |         42 |          5 |          2 |         49 |
+| /home/dell/Desktop/Simulator/fetch.h                | C++      |         24 |          5 |          0 |         29 |
+| /home/dell/Desktop/Simulator/forward_declarations.h | C++      |          0 |          0 |          1 |          1 |
+| /home/dell/Desktop/Simulator/functionUnit.h         | C++      |          0 |          0 |          1 |          1 |
+| /home/dell/Desktop/Simulator/global.cpp             | C++      |         39 |          3 |          2 |         44 |
+| /home/dell/Desktop/Simulator/global.h               | C++      |         55 |         21 |         11 |         87 |
+| /home/dell/Desktop/Simulator/historySnapshot.cpp    | C++      |         58 |         20 |          4 |         82 |
+| /home/dell/Desktop/Simulator/historySnapshot.h      | C++      |         27 |          1 |          3 |         31 |
+| /home/dell/Desktop/Simulator/instruction.cpp        | C++      |        113 |          2 |          9 |        124 |
+| /home/dell/Desktop/Simulator/instruction.h          | C++      |         66 |          7 |          5 |         78 |
+| /home/dell/Desktop/Simulator/instruction_type.h     | C++      |         13 |          0 |          0 |         13 |
+| /home/dell/Desktop/Simulator/issue.cpp              | C++      |        120 |          7 |         10 |        137 |
+| /home/dell/Desktop/Simulator/issue.h                | C++      |         15 |          0 |          3 |         18 |
+| /home/dell/Desktop/Simulator/main.cpp               | C++      |         49 |          8 |          2 |         59 |
+| /home/dell/Desktop/Simulator/registerDependency.cpp | C++      |          0 |          0 |          1 |          1 |
+| /home/dell/Desktop/Simulator/registerDependency.h   | C++      |         31 |          9 |          1 |         41 |
+| /home/dell/Desktop/Simulator/renaming.cpp           | C++      |        322 |         26 |         13 |        361 |
+| /home/dell/Desktop/Simulator/renaming.h             | C++      |         36 |          7 |          1 |         44 |
+| /home/dell/Desktop/Simulator/reservationStation.cpp | C++      |          0 |          0 |          1 |          1 |
+| /home/dell/Desktop/Simulator/reservationStation.h   | C++      |         20 |         83 |         20 |        123 |
+| /home/dell/Desktop/Simulator/resources_management.h | C++      |          0 |          5 |          1 |          6 |
+| /home/dell/Desktop/Simulator/simulator.cpp          | C++      |        129 |         38 |         11 |        178 |
+| /home/dell/Desktop/Simulator/simulator.h            | C++      |         46 |         18 |          6 |         70 |
+| /home/dell/Desktop/Simulator/snapshotType.cpp       | C++      |          2 |          0 |          1 |          3 |
+| /home/dell/Desktop/Simulator/snapshotType.h         | C++      |         16 |         11 |          1 |         28 |
+| /home/dell/Desktop/Simulator/unit.cpp               | C++      |         66 |          1 |          3 |         70 |
+| /home/dell/Desktop/Simulator/unit.h                 | C++      |         30 |          0 |          2 |         32 |
+| /home/dell/Desktop/Simulator/unit_type.h            | C++      |         12 |          0 |          0 |         12 |
+| /home/dell/Desktop/Simulator/utils.cpp              | C++      |          1 |        102 |         15 |        118 |
+| /home/dell/Desktop/Simulator/utils.h                | C++      |          6 |          5 |          2 |         13 |
+| /home/dell/Desktop/Simulator/wb.h                   | C++      |          0 |          0 |          1 |          1 |
+| Total                                               |          |      1,635 |        444 |        163 |      2,242 |
++-----------------------------------------------------+----------+------------+------------+------------+------------+

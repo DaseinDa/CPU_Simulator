@@ -7,8 +7,8 @@ class Decode{
     private:
         const int ni=NI;
     public:
-        bool dispatch();
+        bool decode();
         Decode();
         ~Decode();
-        void decode(Instruction& instruction);
+        // void decodeIntstruction(Instruction& instruction);
 };
