@@ -129,7 +129,8 @@ void Issue::issue(){
 
         }
 }
-
+    //forwarding的原子操作之一，检查有没有之前execute阶段forwarding的指令
+    checkRSOperandsReady();
 }
 
 void Issue::insert2RS(ReservationStationEntry& rs_entry){

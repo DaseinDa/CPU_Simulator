@@ -16,13 +16,14 @@ struct ReservationStationEntry {
     string Qk="";        // 操作数2依赖的ROB/tag（如果未就绪）
 
     string destPhysicalRegister="";      // 目的寄存器/ROB条目标识符（写结果去哪里）
-    string destROB="";      // 目的寄存器/ROB条目标识符（写结果去哪里）
+    int destROB=-1;      // 目的寄存器/ROB条目标识符（写结果去哪里）
 
     int latency = 0;       // 执行所需时钟周期（用于多周期指令）
     int issueCycle = -1;   // 指令被调度的周期（用于统计和调试）
     int rsCycle = -1;// 指令进入RS的周期
 
     optional<int> A;//immediate number
+
 
     int ID_in_Queue;    // 可选：指向原始指令对象（方便调试/追踪）
 

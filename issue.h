@@ -5,7 +5,7 @@
 #include "global.h"
 #include "unit.h"
 #include "ROB.h"
-
+#include "forwarding.h"
 
 
 class Issue{

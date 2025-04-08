@@ -209,6 +209,9 @@ void Execute::executeINT(){
             entry->rs_entry.result=result;
             //写进completeRSqueue,代表计算完成的指令
             insertCompletedEntry(entry->rs_entry);
+            //  Forwarding 原子操作：写入物理寄存器（PRF）并设置为ready
+            string prf_id = entry->rs_entry.destPhysicalRegister;
+            writePRF(prf_id, double(result));
             //ROB和CDB在write back阶段更新
         }
         entry++;
@@ -255,7 +258,9 @@ void Execute::executeSTORE(){
             }
             entry->rs_entry.result=memory_address;//Vj也一起传进去了
             //写进completeRSqueue,代表计算完成的指令
-            insertCompletedEntry(entry->rs_entry);
+            ReadyStore readyStore;
+            readyStore.rob_id=entry->rs_entry.rob_id;
+            insertStoreQueue();
             //ROB和CDB在write back阶段更新
         }
         entry++;
@@ -277,6 +282,9 @@ void Execute::executeFPADD(){
             entry->rs_entry.result=result;
             //写进completeRSqueue,代表计算完成的指令
             insertCompletedEntry(entry->rs_entry);
+            //  Forwarding 原子操作：写入物理寄存器（PRF）并设置为ready
+            string prf_id = entry->rs_entry.destPhysicalRegister;
+            writePRF(prf_id, double(result));
             //ROB和CDB在write back阶段更新
         }
         entry++;
@@ -297,6 +305,9 @@ void Execute::executeFPMULT(){
             entry->rs_entry.result=result;
             //写进completeRSqueue,代表计算完成的指令
             insertCompletedEntry(entry->rs_entry);
+            //  Forwarding 原子操作：写入物理寄存器（PRF）并设置为ready
+            string prf_id = entry->rs_entry.destPhysicalRegister;
+            writePRF(prf_id, double(result));
             //ROB和CDB在write back阶段更新
         }
         entry++;
@@ -319,6 +330,9 @@ void Execute::executeFPDIV(){
             entry->rs_entry.result=result;
             //写进completeRSqueue,代表计算完成的指令
             insertCompletedEntry(entry->rs_entry);
+            //  Forwarding 原子操作：写入物理寄存器（PRF）并设置为ready
+            string prf_id = entry->rs_entry.destPhysicalRegister;
+            writePRF(prf_id, double(result));
             //ROB和CDB在write back阶段更新
         }
         entry++;
@@ -368,17 +382,17 @@ bool Execute::executeBU(int earliest_ID_in_Queue){
 
 
 
-void Execute::insertCompletedEntry(const ReservationStationEntry& entry) {
+void Execute::insertCompletedEntry(const ReadyStore& entry) {
     auto it = std::lower_bound(
         Global::completeRSQueue.begin(),
         Global::completeRSQueue.end(),
         entry,
-        [](const ReservationStationEntry& a, const ReservationStationEntry& b) {
+        [](const ReadyStore& a, const ReadyStore& b) {
             return a.ID_in_Queue < b.ID_in_Queue;  // 升序排序标准
         }
     );
 
-    Global::completeRSQueue.insert(it, entry);  // 插入到正确位置
+    Global::StoreQueue.insert(it, entry);  // 插入到正确位置
 }
 int Execute::getEarliestIDIn_RS_BU_Queue() {
     if (Global::RS_BU_Queue.empty()) {

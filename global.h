@@ -21,6 +21,7 @@ using namespace std;
 #include "reservationStation.h"
 #include "ROB.h"
 #include "unit_pip.h"
+#include "loadstore.h"
 extern unsigned int NF;
 extern unsigned int NI;
 extern unsigned int NW;
@@ -77,6 +78,9 @@ namespace Global {
     extern deque<PipelineStage> BU_pipeline;
     //完成计算的指令,等待写CDB,ROB
     extern vector<ReservationStationEntry> completeRSQueue;
+    extern vector<LoadResult> LoadQueue;
+    extern vector<PendingLoad> LoadHazardQueue;
+    extern vector<ReadyStore> StoreQueue;
 }
 
 string getInstructionAddress(int instructionNumber);

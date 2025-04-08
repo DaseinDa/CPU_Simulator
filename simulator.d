@@ -20,4 +20,5 @@ obj/simulator.o: /home/dell/Desktop/Simulator//simulator.cpp \
  /home/dell/Desktop/Simulator//snapshotType.h \
  /home/dell/Desktop/Simulator//decode.h \
  /home/dell/Desktop/Simulator//issue.h \
+ /home/dell/Desktop/Simulator//forwarding.h \
  /home/dell/Desktop/Simulator//execute.h

@@ -9,6 +9,8 @@
 #include "unit_pip.h"
 #include "common.h"
 #include "historySnapshot.h"
+#include "forwarding.h"
+#include "loadstore.h"
 using namespace std;
 class Execute{
     public:
@@ -21,5 +23,6 @@ class Execute{
     void executeFPDIV();
     bool executeBU(int earliest_ID_in_Queue);
     void insertCompletedEntry(const ReservationStationEntry& entry);
+    void insertStoreQueue(const ReadyStore& entry);
     int getEarliestIDIn_RS_BU_Queue();
 };
