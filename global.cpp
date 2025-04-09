@@ -43,11 +43,17 @@ namespace Global {
     deque<PipelineStage> BU_pipeline;
     //完成计算的指令
     vector<ReservationStationEntry> completeRSQueue;
+    vector<ReservationStationEntry> BUQueue;
+    //load store
+    vector<LoadResult> LoadQueue;
+    vector<PendingLoad> LoadHazardQueue;
+    vector<ReadyStore> StoreQueue;
 }
 unsigned int NF=4;
 unsigned int NI=16;
 unsigned int NW=4;
 unsigned int NR=16;
+unsigned int NB=4;
 bool DebugMode=true;
 
 void printRenamingWorkerMapping(){

@@ -13,4 +13,5 @@ obj/btb.o: /home/dell/Desktop/Simulator//btb.cpp \
  /home/dell/Desktop/Simulator//reservationStation.h \
  /home/dell/Desktop/Simulator//ROB.h \
  /home/dell/Desktop/Simulator//unit_pip.h \
+ /home/dell/Desktop/Simulator//loadstore.h \
  /home/dell/Desktop/Simulator//unit_type.h

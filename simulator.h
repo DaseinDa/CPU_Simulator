@@ -45,6 +45,7 @@ class Simulator{
     public:
     Simulator();
     ~Simulator();
+    void run();
     void ReadAssemblyFile(char * PathFile);
     void readInstruction(string line);
     void readMemory(string line);

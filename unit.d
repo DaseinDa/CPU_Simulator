@@ -13,4 +13,5 @@ obj/unit.o: /home/dell/Desktop/Simulator//unit.cpp \
  /home/dell/Desktop/Simulator//dependency.h \
  /home/dell/Desktop/Simulator//reservationStation.h \
  /home/dell/Desktop/Simulator//ROB.h \
- /home/dell/Desktop/Simulator//unit_pip.h
+ /home/dell/Desktop/Simulator//unit_pip.h \
+ /home/dell/Desktop/Simulator//loadstore.h

@@ -1,4 +1,5 @@
-obj/global.o: /home/dell/Desktop/Simulator//global.cpp \
+obj/wb.o: /home/dell/Desktop/Simulator//wb.cpp \
+ /home/dell/Desktop/Simulator//wb.h \
  /home/dell/Desktop/Simulator//global.h \
  /home/dell/Desktop/Simulator//common.h \
  /home/dell/Desktop/Simulator//BranchPredictStage.h \
@@ -15,5 +16,5 @@ obj/global.o: /home/dell/Desktop/Simulator//global.cpp \
  /home/dell/Desktop/Simulator//ROB.h \
  /home/dell/Desktop/Simulator//unit_pip.h \
  /home/dell/Desktop/Simulator//loadstore.h \
- /home/dell/Desktop/Simulator//historySnapshot.h \
- /home/dell/Desktop/Simulator//snapshotType.h
+ /home/dell/Desktop/Simulator//loadstoretype.h \
+ /home/dell/Desktop/Simulator//forwarding.h

@@ -96,12 +96,14 @@ void Issue::issue(){
             if(inst.opcode==InstructionType::bne || inst.opcode==InstructionType::fsd){
                 ROBEntry rob_entry;
                 rob_entry.ID_in_Queue=inst.ID_in_Queue.value();
+                rob_entry.opcode=inst.opcode;
                 rob_entry.status=InstructionStatus::ISSUE;
                 Global::robTail=inst.ID_in_Queue.value()%NR;
                 Global::ROBuffer.at(Global::robTail)=rob_entry;
             }else{
                 ROBEntry rob_entry;
                 rob_entry.ID_in_Queue=inst.ID_in_Queue.value();
+                rob_entry.opcode=inst.opcode;
                 rob_entry.status=InstructionStatus::ISSUE;
                 rob_entry.dest_archi_register=Global::instructionQueue[inst.ID_in_Queue.value()].operands[0];
                 rob_entry.dest_physical_register=inst.operands[0];//现在已经是物理寄存器指令了

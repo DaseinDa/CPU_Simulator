@@ -28,4 +28,5 @@ class HistorySnapshot {
         void printHistory();
         void printSnapshot(const Snapshot snapshot);
         void clearHistoryAfter(int ID_in_Queue);
+        void flush(int ID_in_Queue, bool actucalPrediction);
 };

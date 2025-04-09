@@ -177,3 +177,7 @@ void Simulator::pipelineGlobalCycle(){
     i->issue();
     e->execute();
 }
+void Simulator::run(){
+    do pipelineGlobalCycle();
+    while(Global::fetchInstructionQueue.size() > 0 || Global::decodeInstructionQueue.size() > 0 ||  Global::ROBuffer.size()>0);
+}

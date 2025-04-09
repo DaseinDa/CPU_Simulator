@@ -14,6 +14,7 @@ obj/main.o: /home/dell/Desktop/Simulator//main.cpp \
  /home/dell/Desktop/Simulator//reservationStation.h \
  /home/dell/Desktop/Simulator//ROB.h \
  /home/dell/Desktop/Simulator//unit_pip.h \
+ /home/dell/Desktop/Simulator//loadstore.h \
  /home/dell/Desktop/Simulator//simulator.h \
  /home/dell/Desktop/Simulator//fetch.h \
  /home/dell/Desktop/Simulator//historySnapshot.h \

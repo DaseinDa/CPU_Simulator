@@ -27,6 +27,7 @@ bool Execute::execute(){
             BU_pipeline_entry.rs_entry=*it;
             BU_pipeline_entry.remaining_latency=it->latency;
             Global::BU_pipeline.push_back(BU_pipeline_entry);
+            Global::instructionQueue[it->ID_in_Queue].status_in_Queue=InstructionStatus::EXECUTE;
             issue++;
             //先进pipeline才能删除，不然就读不到了，从RS中删除
             it=Global::RS_BU_Queue.erase(it);
@@ -50,6 +51,7 @@ bool Execute::execute(){
                 INT_pipeline_entry.rs_entry=*entry;
                 INT_pipeline_entry.remaining_latency=entry->latency;
                 Global::INT_pipeline.push_back(INT_pipeline_entry);
+                Global::instructionQueue[entry->ID_in_Queue].status_in_Queue=InstructionStatus::EXECUTE;
                 issue++;
                 //先进pipeline才能删除，不然就读不到了，从RS中删除
                 entry=Global::RS_INT_Queue.erase(entry);
@@ -72,6 +74,7 @@ bool Execute::execute(){
                 LOAD_pipeline_entry.rs_entry=*entry;
                 LOAD_pipeline_entry.remaining_latency=entry->latency;
                 Global::LOAD_pipeline.push_back(LOAD_pipeline_entry);
+                Global::instructionQueue[entry->ID_in_Queue].status_in_Queue=InstructionStatus::EXECUTE;
                 issue++;
                 //先进pipeline才能删除，不然就读不到了，从RS中删除
                 entry=Global::RS_LOAD_Queue.erase(entry);
@@ -94,6 +97,8 @@ bool Execute::execute(){
                 STORE_pipeline_entry.rs_entry=*entry;
                 STORE_pipeline_entry.remaining_latency=entry->latency;
                 Global::STORE_pipeline.push_back(STORE_pipeline_entry);
+
+                Global::instructionQueue[entry->ID_in_Queue].status_in_Queue=InstructionStatus::EXECUTE;
                 issue++;
                 //先进pipeline才能删除，不然就读不到了，从RS中删除
                 entry=Global::RS_STORE_Queue.erase(entry);
@@ -117,6 +122,8 @@ bool Execute::execute(){
                 FPADD_pipeline_entry.rs_entry=*entry;
                 FPADD_pipeline_entry.remaining_latency=entry->latency;
                 Global::FPadd_pipeline.push_back(FPADD_pipeline_entry);
+
+                Global::instructionQueue[entry->ID_in_Queue].status_in_Queue=InstructionStatus::EXECUTE;
                 issue++;
                 //先进pipeline才能删除，不然就读不到了，从RS中删除
                 entry=Global::RS_FPadd_Queue.erase(entry);
@@ -138,6 +145,7 @@ bool Execute::execute(){
                 FPmult_pipeline_entry.rs_entry=*entry;
                 FPmult_pipeline_entry.remaining_latency=entry->latency;
                 Global::FPmult_pipeline.push_back(FPmult_pipeline_entry);
+                Global::instructionQueue[entry->ID_in_Queue].status_in_Queue=InstructionStatus::EXECUTE;
                 //先进pipeline才能删除，不然就读不到了，从RS中删除
                 entry=Global::RS_FPmult_Queue.erase(entry);
                 break;
@@ -157,6 +165,7 @@ bool Execute::execute(){
                 FPdiv_pipeline_entry.rs_entry=*entry;
                 FPdiv_pipeline_entry.remaining_latency=entry->latency;
                 Global::FPdiv_pipeline.push_back(FPdiv_pipeline_entry);
+                Global::instructionQueue[entry->ID_in_Queue].status_in_Queue=InstructionStatus::EXECUTE;
                 //先进pipeline才能删除，不然就读不到了，从RS中删除
                 entry=Global::RS_FPdiv_Queue.erase(entry);
                 break;
@@ -234,10 +243,50 @@ void Execute::executeLOAD(){
             else{
                 throw runtime_error("opcode is not LOAD");
             }
-            entry->rs_entry.result=memory_address;
-            //写进completeRSqueue,代表计算完成的指令
-            insertCompletedEntry(entry->rs_entry);
-            //ROB和CDB在write back阶段更新
+            int allready=LoadStore::allFSDReadyAndForwardValue(entry->rs_entry.destROB);
+            //如果前面不存在fsd指令，则写进LoadQueue,代表计算完成的指令且forwarding
+            if(!LoadStore::existsFSDInROB(entry->rs_entry.ID_in_Queue)){
+                LoadResult loadResult;
+                double value=Global::memory_value[memory_address];
+                loadResult.rob_id=entry->rs_entry.destROB;
+                loadResult.prf_id=entry->rs_entry.destPhysicalRegister;
+                loadResult.value=value;
+                loadResult.ID_in_Queue=entry->rs_entry.ID_in_Queue;
+                LoadStore::insertLoadQueue(loadResult);
+                writePRF(entry->rs_entry.destPhysicalRegister, value);//直接forwarding
+            }else if(allready){
+                //判断是否所有的fsd都ready了，ready的fsd存储在StoreQueue中,检查在不在StoreQueue
+                //判断memory_address是否一样，如果一样直接forwarding
+                //如果不存在memory_address的，则forward当前memory list值
+               optional<double> value=LoadStore::findLatestStoreBeforeWithAddress(memory_address,entry->rs_entry.destROB);
+               if(value.has_value()){
+                    LoadResult loadResult;
+                    loadResult.rob_id=entry->rs_entry.destROB;
+                    loadResult.prf_id=entry->rs_entry.destPhysicalRegister;
+                    loadResult.value=value.value();
+                    LoadStore::insertLoadQueue(loadResult);
+                    writePRF(entry->rs_entry.destPhysicalRegister, value.value());//直接forwarding
+                }else{//说明全部ready,但是不存在memory_address一样的fsd，和没有fsd一样forward
+                    LoadResult loadResult;
+                    double value=Global::memory_value[memory_address];
+                    loadResult.rob_id=entry->rs_entry.destROB;
+                    loadResult.prf_id=entry->rs_entry.destPhysicalRegister;
+                    loadResult.value=value;
+                    loadResult.ID_in_Queue=entry->rs_entry.ID_in_Queue;
+                    LoadStore::insertLoadQueue(loadResult);
+                    writePRF(entry->rs_entry.destPhysicalRegister, value);//直接forwarding
+                }
+            }else if(!allready){
+                //说明存在fsd，但是没有ready，则加入PendingLoad,无法执行forwarding
+                PendingLoad pendingLoad;
+                pendingLoad.rob_id=entry->rs_entry.destROB;
+                pendingLoad.prf_id=entry->rs_entry.destPhysicalRegister;
+                pendingLoad.address=memory_address;
+                pendingLoad.ID_in_Queue=entry->rs_entry.ID_in_Queue;
+                LoadStore::insertPendingLoadQueue(pendingLoad);
+            }else{
+                throw runtime_error("unexpected fsd fld relationship");
+            }
         }
         entry++;
     }
@@ -256,11 +305,14 @@ void Execute::executeSTORE(){
             else{
                 throw runtime_error("opcode is not STORE");
             }
-            entry->rs_entry.result=memory_address;//Vj也一起传进去了
             //写进completeRSqueue,代表计算完成的指令
             ReadyStore readyStore;
-            readyStore.rob_id=entry->rs_entry.rob_id;
-            insertStoreQueue();
+            readyStore.rob_id=entry->rs_entry.destROB;
+            readyStore.prf_id=entry->rs_entry.destPhysicalRegister;
+            readyStore.address=memory_address;
+            readyStore.value=entry->rs_entry.Vj;
+            readyStore.ID_in_Queue=entry->rs_entry.ID_in_Queue;
+            LoadStore::insertStoreQueue(readyStore);
             //ROB和CDB在write back阶段更新
         }
         entry++;
@@ -365,12 +417,13 @@ bool Execute::executeBU(int earliest_ID_in_Queue){
                 insertCompletedEntry(entry->rs_entry);
             }else if(earliest_ID_in_Queue==entry->rs_entry.ID_in_Queue && !predictTrueFalse){
                 //立刻回滚，整个execute pipieline结束运行
+                Global::btb.update(entry->rs_entry.ID_in_Queue,result);
                 Global::historySnapshot.predictionTrueFalseRecover(Global::instructionQueue[entry->rs_entry.ID_in_Queue],predictTaken);
                 return false;
             }else{//不能在Execute直接回滚，只有传给ROB决定了,ROB还要判断回滚
                 entry->rs_entry.predictTrueFalse=predictTrueFalse;
                 Global::btb.update(entry->rs_entry.ID_in_Queue,result);
-                insertCompletedEntry(entry->rs_entry);
+                insertBUEntry(entry->rs_entry);
             }
             //ROB和CDB在write back阶段更新
         }
@@ -379,20 +432,30 @@ bool Execute::executeBU(int earliest_ID_in_Queue){
     return true;
 }
 
-
-
-
-void Execute::insertCompletedEntry(const ReadyStore& entry) {
+void Execute::insertCompletedEntry(const ReservationStationEntry& entry) {
     auto it = std::lower_bound(
         Global::completeRSQueue.begin(),
         Global::completeRSQueue.end(),
         entry,
-        [](const ReadyStore& a, const ReadyStore& b) {
+        [](const ReservationStationEntry& a, const ReservationStationEntry& b) {
             return a.ID_in_Queue < b.ID_in_Queue;  // 升序排序标准
         }
     );
 
-    Global::StoreQueue.insert(it, entry);  // 插入到正确位置
+    Global::completeRSQueue.insert(it, entry);  // 插入到正确位置
+}
+
+void Execute::insertBUEntry(const ReservationStationEntry& entry) {
+    auto it = std::lower_bound(
+        Global::BUQueue.begin(),
+        Global::BUQueue.end(),
+        entry,
+        [](const ReservationStationEntry& a, const ReservationStationEntry& b) {
+            return a.ID_in_Queue < b.ID_in_Queue;  // 升序排序标准
+        }
+    );
+
+    Global::BUQueue.insert(it, entry);  // 插入到正确位置
 }
 int Execute::getEarliestIDIn_RS_BU_Queue() {
     if (Global::RS_BU_Queue.empty()) {

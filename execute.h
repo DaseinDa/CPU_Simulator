@@ -23,6 +23,6 @@ class Execute{
     void executeFPDIV();
     bool executeBU(int earliest_ID_in_Queue);
     void insertCompletedEntry(const ReservationStationEntry& entry);
-    void insertStoreQueue(const ReadyStore& entry);
+    void insertBUEntry(const ReservationStationEntry& entry);
     int getEarliestIDIn_RS_BU_Queue();
 };

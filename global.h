@@ -22,6 +22,7 @@ using namespace std;
 #include "ROB.h"
 #include "unit_pip.h"
 #include "loadstore.h"
+#include "loadstoretype.h"
 extern unsigned int NF;
 extern unsigned int NI;
 extern unsigned int NW;
@@ -78,6 +79,7 @@ namespace Global {
     extern deque<PipelineStage> BU_pipeline;
     //完成计算的指令,等待写CDB,ROB
     extern vector<ReservationStationEntry> completeRSQueue;
+    extern vector<ReservationStationEntry> BUQueue;
     extern vector<LoadResult> LoadQueue;
     extern vector<PendingLoad> LoadHazardQueue;
     extern vector<ReadyStore> StoreQueue;

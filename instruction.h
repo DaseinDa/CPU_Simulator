@@ -28,7 +28,7 @@ public:
     int instructionNumber=0;
     //当开始fetch时候，记录指令的程序顺序和status
     optional<int> ID_in_Queue;
-    optional<int> status_in_Queue;
+    optional<InstructionStatus> status_in_Queue;
     string Qj;
     string Qk;
     double Vj=0;
