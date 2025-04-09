@@ -180,8 +180,8 @@ void Simulator::pipelineGlobalCycle(){
     // i->issue();
     // //
     // if(!f->fetch()) fetchStall++;
-    w->writeBack();
     c->commit();
+    w->writeBack();
     e->execute();
     i->issue();
     if(!d->decode()) decodeStall++;
