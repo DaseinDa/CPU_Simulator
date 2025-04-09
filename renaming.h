@@ -8,7 +8,6 @@
 #include <optional>
 #include <sstream>
 #include <unordered_map>
-#include "global.h"
 #include "common.h"
 #include "instruction_type.h"
 class Instruction;

@@ -13,6 +13,8 @@
 #include "decode.h"
 #include "issue.h"
 #include "execute.h"
+#include "wb.h"
+#include "commit.h"
 #include "btb.h"
 #include "instruction.h"
 using namespace std;
@@ -59,6 +61,8 @@ class Simulator{
     Decode *d;
     Issue *i;
     Execute *e;
+    WriteBack *w;
+    Commit *c;
     //execute
     void execute();
     void commitInstruction();

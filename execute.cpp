@@ -1,6 +1,7 @@
 #include "execute.h"
 
 bool Execute::execute(){
+    cout<<"--------------------------Execute-------------------------"<<endl;
     //1. 从ROB中获取指令
     //2. 从RS中获取指令
     //3. 执行指令

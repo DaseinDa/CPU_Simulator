@@ -5,6 +5,7 @@ Fetch::Fetch(){
 
 
 bool Fetch::fetch(){
+    cout<<"--------------------------Fetch-------------------------"<<endl;
     cout<<"fetch dispatching..., nf="<<nf<<endl;
     if(Global::fetchInstructionQueue.size()>=nf){
         return false;//如果已经没有空余bandwidth,什么都不fetch,count as a stall

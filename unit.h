@@ -2,7 +2,7 @@
 #ifndef UNIT_H
 #define UNIT_H
 
-#include "global.h"
+// #include "global.h"
 #include "btb.h"
 #include "instruction_type.h"
 #include "unit_type.h"

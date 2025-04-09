@@ -9,17 +9,20 @@ obj/main.o: /home/dell/Desktop/Simulator//main.cpp \
  /home/dell/Desktop/Simulator//instruction_type.h \
  /home/dell/Desktop/Simulator//unit_type.h \
  /home/dell/Desktop/Simulator//renaming.h \
- /home/dell/Desktop/Simulator//archiRegister.h \
- /home/dell/Desktop/Simulator//dependency.h \
- /home/dell/Desktop/Simulator//reservationStation.h \
- /home/dell/Desktop/Simulator//ROB.h \
- /home/dell/Desktop/Simulator//unit_pip.h \
- /home/dell/Desktop/Simulator//loadstore.h \
- /home/dell/Desktop/Simulator//simulator.h \
- /home/dell/Desktop/Simulator//fetch.h \
  /home/dell/Desktop/Simulator//historySnapshot.h \
  /home/dell/Desktop/Simulator//snapshotType.h \
+ /home/dell/Desktop/Simulator//ROB.h \
+ /home/dell/Desktop/Simulator//unit_pip.h \
+ /home/dell/Desktop/Simulator//reservationStation.h \
+ /home/dell/Desktop/Simulator//archiRegister.h \
+ /home/dell/Desktop/Simulator//loadstore.h \
+ /home/dell/Desktop/Simulator//loadstoretype.h \
+ /home/dell/Desktop/Simulator//dependency.h \
+ /home/dell/Desktop/Simulator//simulator.h \
+ /home/dell/Desktop/Simulator//fetch.h \
  /home/dell/Desktop/Simulator//decode.h \
  /home/dell/Desktop/Simulator//issue.h \
  /home/dell/Desktop/Simulator//forwarding.h \
- /home/dell/Desktop/Simulator//execute.h
+ /home/dell/Desktop/Simulator//execute.h \
+ /home/dell/Desktop/Simulator//wb.h \
+ /home/dell/Desktop/Simulator//commit.h

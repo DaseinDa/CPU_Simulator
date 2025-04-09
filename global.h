@@ -15,6 +15,7 @@ class BTB;//Forward declaration
 class RegisterRenaming;//Forward declaration
 #include "renaming.h"
 class HistorySnapshot;//Forward declaration
+#include "historySnapshot.h"
 using namespace std;
 #include "archiRegister.h"
 #include "dependency.h"

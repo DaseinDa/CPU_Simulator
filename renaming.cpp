@@ -1,5 +1,6 @@
 #include "renaming.h"
 #include "instruction.h"
+#include "global.h"
 void RegisterRenaming::initPhysicalRegs(){
     // $0 register is default always to save the 0 address in the whole process
     cout<<"######initPhysicalRegs######"<<endl;
@@ -21,15 +22,18 @@ bool RegisterRenaming::isPhysicalRegsAvailable(){
 }
 string RegisterRenaming::allocatePhysicalReg(string originRegName, bool isDesReg){
     printRegisterRenamingMapping();
-    cout<<"Renaming...Distribute physical register..."<<endl;
+    cout<<"Renaming...Distribute physical register... start"<<endl;
     if(originRegName==ZERO_REGISTER){
+        cout<<"#########################"<<endl;
         return ZERO_REGISTER;
     }else if(registerRenamingMapping.count(originRegName)){//是不是已经包含在之前的mapping里了，如果包含且不是destination register就不用分配寄存器，用之前mapping的分配就可以
         if(!isDesReg){
+            cout<<"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"<<endl;
             return registerRenamingMapping[originRegName];//不做任何改变
+        }else{
+            cout<<"[WARNING] destination register already has mapping. Re-assigning new physical register"<<endl;
         }
-    }else{
-
+    }
         string freeReg = RegisterRenamingFreeList.front();
         //freeReg是物理寄存器名
         RegisterRenamingFreeList.pop_front();
@@ -46,9 +50,9 @@ string RegisterRenaming::allocatePhysicalReg(string originRegName, bool isDesReg
             physicalRegister[freeReg].value=Global::architectureRegisterFile[originRegName].value;
             //天然如果第一次出现，自动添加到architectureRegisterFile且初始值为0
         }
-
         return freeReg;
-    }
+    
+    cout<<"**********************&*********************"<<endl;
 }
 //只有当某条指令将它分配为“目标寄存器”时，才将其置为 ready = false
 bool RegisterRenaming::instructionRegisterRenaming(Instruction& intr){

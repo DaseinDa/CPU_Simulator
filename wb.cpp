@@ -2,6 +2,9 @@
 //CDB的写回策略是先写回fsd指令，
 //因为都是升序序，所以从front取就可以保证取最早的
 //ALU最后写，因为都已经forwarding了
+WriteBack::WriteBack(){
+
+}
 void WriteBack::writeBack(){
     for(int i=0;i<nb;i++){
         if(!Global::BUQueue.empty()){

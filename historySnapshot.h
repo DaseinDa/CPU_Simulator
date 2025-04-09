@@ -12,8 +12,7 @@
 #include "btb.h"
 #include "renaming.h"
 #include "snapshotType.h"
-
-// #include "global.h"
+#include "global.h"
 using namespace std;
 
 class HistorySnapshot {

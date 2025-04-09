@@ -56,6 +56,6 @@ int main(int argc, char *argv[])
     Global::ROBuffer = vector<ROBEntry>(NR);
     Simulator simulator;
     simulator.ReadAssemblyFile("assembly.dat");
-    simulator.pipelineGlobalCycle();
+    simulator.run();
     return 0;
 }

@@ -10,6 +10,7 @@
 #include "unit.h"
 #include "instruction_type.h"
 #include "unit_type.h"
+#include "common.h"
 using namespace std;
 
 

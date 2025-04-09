@@ -7,7 +7,7 @@ Issue::~Issue(){
 }
 
 void Issue::issue(){
-    cout<<"Issue......"<<endl;
+    cout<<"--------------------------Issue-------------------------"<<endl;
     bool rsStallThisCycle=false;
     bool robStallThisCycle=false;
 

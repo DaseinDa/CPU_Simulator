@@ -8,6 +8,7 @@ Decode::~Decode() {
     // Destructor implementation - clean up any resources
 }
 bool Decode::decode(){
+    cout<<"--------------------------Decode-------------------------"<<endl;
     if(Global::decodeInstructionQueue.size()>=ni){
         return false;//没有任何capacity可以dispatch不做任何操作
     }

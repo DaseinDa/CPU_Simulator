@@ -161,10 +161,7 @@ void Simulator::pipelineGlobalCycle(){
         cout<<"-------------------instructionset fail to copy-----------"<<endl;
     }
 
-    this->d= new Decode();
-    this->f= new Fetch();
-    this->i= new Issue();
-    this->e= new Execute();
+
     //commit
     //write back
     //memory access
@@ -172,12 +169,42 @@ void Simulator::pipelineGlobalCycle(){
     //decode+issue
     //fetch一个cycle只能fetch 4个instruction,fetech不分发是否应该统计为stall
     //fetch最后执行因为需要先检查更早执行的指令是不是先能进入下一个状态释放出早期执行的资源
-    if(!f->fetch()) fetchStall++;
-    if(!d->decode()) decodeStall++;
-    i->issue();
+    //decode+issue
+    cout<<"---------------------------------------------------------------------------------------------------------------------------"<<endl;
+    // w->writeBack();
+    // c->commit();
+    // //
+    // e->execute();
+    // //
+    // if(!d->decode()) decodeStall++;
+    // i->issue();
+    // //
+    // if(!f->fetch()) fetchStall++;
+    w->writeBack();
+    c->commit();
     e->execute();
+    i->issue();
+    if(!d->decode()) decodeStall++;
+    if(!f->fetch()) fetchStall++;
+
+
+    // e->execute();
+    // w->writeBack();
+    // c->commit();
 }
 void Simulator::run(){
-    do pipelineGlobalCycle();
-    while(Global::fetchInstructionQueue.size() > 0 || Global::decodeInstructionQueue.size() > 0 ||  Global::ROBuffer.size()>0);
+    this->d= new Decode();
+    this->f= new Fetch();
+    this->i= new Issue();
+    this->e= new Execute();
+    this->w= new WriteBack();
+    this->c=new Commit();
+    // do pipelineGlobalCycle();
+    // while(Global::fetchInstructionQueue.size() > 0 || Global::decodeInstructionQueue.size() > 0 ||  Global::ROBuffer.size()>0);
+    // do pipelineGlobalCycle();
+    // while(Global::fetchInstructionQueue.size() > 0);
+    for(int i=0;i<50;i++){
+        sleep(1);
+        pipelineGlobalCycle();
+    }
 }

@@ -12,12 +12,48 @@ void HistorySnapshot::addSnapshot(Instruction bne_instruction) {
         throw runtime_error("addSnapshot() called with non-BNE instruction");
     }
     snapshot.bne_instruction = bne_instruction;
-    snapshot.memory_value = Global::memory_value;
-    snapshot.renaming_worker = Global::renaming_worker;
-    snapshot.instructionset = Global::instructionset;
-    snapshot.fetchInstructionQueue = Global::fetchInstructionQueue;
-    snapshot.fetch_pointer = Global::fetch_pointer;
-    snapshot.btb = Global::btb; 
+    snapshot.current_cycle=Global::current_cycle;
+    snapshot.labelMap=Global::labelMap;
+    snapshot.memory_value=Global::memory_value;
+    snapshot.renaming_worker=Global::renaming_worker;
+    snapshot.instructionQueue=Global::instructionQueue;
+    snapshot.fetchInstructionQueue=Global::fetchInstructionQueue;   
+    snapshot.fetch_pointer=Global::fetch_pointer;
+    snapshot.btb=Global::btb;
+    snapshot.architectureRegisterFile=Global::architectureRegisterFile;
+    snapshot.decodeInstructionQueue=Global::decodeInstructionQueue;
+    snapshot.renameStall=Global::renameStall;
+    //Issue
+    //ReservationStation
+    snapshot.RS_INT_Queue=Global::RS_INT_Queue;
+    snapshot.RS_LOAD_Queue=Global::RS_LOAD_Queue;
+    snapshot.RS_STORE_Queue=Global::RS_STORE_Queue;
+    snapshot.RS_FPadd_Queue=Global::RS_FPadd_Queue;
+    snapshot.RS_FPmult_Queue=Global::RS_FPmult_Queue;
+    snapshot.RS_FPdiv_Queue=Global::RS_FPdiv_Queue;
+    snapshot.RS_BU_Queue=Global::RS_BU_Queue;
+    snapshot.rsFullNumber=Global::rsFullNumber;
+    snapshot.stallCount_RSFull=Global::stallCount_RSFull;
+    //ROB
+    snapshot.stallCount_ROBFull=Global::stallCount_ROBFull;
+    snapshot.robHead=Global::robHead;
+    snapshot.robTail=Global::robTail;
+    snapshot.ROBuffer=Global::ROBuffer;
+    //unit pipeline
+    snapshot.INT_pipeline=Global::INT_pipeline;
+    snapshot.LOAD_pipeline=Global::LOAD_pipeline;
+    snapshot.STORE_pipeline=Global::STORE_pipeline;
+    snapshot.FPadd_pipeline=Global::FPadd_pipeline;
+    snapshot.FPmult_pipeline=Global::FPmult_pipeline;
+    snapshot.FPdiv_pipeline=Global::FPdiv_pipeline;
+    snapshot.BU_pipeline=Global::BU_pipeline;
+    //完成计算的指令
+    snapshot.completeRSQueue=Global::completeRSQueue;
+    snapshot.BUQueue=Global::BUQueue;
+    //load store
+    snapshot.LoadQueue=Global::LoadQueue;
+    snapshot.LoadHazardQueue=Global::LoadHazardQueue;
+    snapshot.StoreQueue=Global::StoreQueue;
     history_snapshots.push_back(snapshot);
 }
 
@@ -48,13 +84,10 @@ void HistorySnapshot::predictionTrueFalseRecover(Instruction bne_instruction, bo
     Global::instructionQueue=snapshot->instructionQueue;
     Global::memory_value = snapshot->memory_value;
     Global::renaming_worker = snapshot->renaming_worker;
-    Global::instructionset = snapshot->instructionset;
     Global::fetchInstructionQueue = snapshot->fetchInstructionQueue;
     Global::decodeInstructionQueue=snapshot->decodeInstructionQueue;
-    Global::historySnapshot=snapshot->historySnapshot;
     Global::architectureRegisterFile=snapshot->architectureRegisterFile;
     Global::renameStall=snapshot->renameStall;
-    Global::dependency_map=snapshot->dependency_map;
     //3. 恢复ROB
     Global::ROBuffer=snapshot->ROBuffer;
     //4. 恢复reservation station
@@ -83,7 +116,6 @@ void HistorySnapshot::predictionTrueFalseRecover(Instruction bne_instruction, bo
     Global::BUQueue=snapshot->BUQueue;
     Global::LoadQueue=snapshot->LoadQueue;
     Global::LoadHazardQueue=snapshot->LoadHazardQueue;
-    Global::LoadResultQueue=snapshot->LoadResultQueue;
     Global::StoreQueue=snapshot->StoreQueue;
     //5. 恢复decode
     //6. 恢复issue
@@ -118,6 +150,7 @@ void HistorySnapshot::flush(int ID_in_Queue, bool actucalPrediction){
             Global::fetch_pointer++;
     }
     Snapshot* snapshot = findMatchingSnapshot(ID_in_Queue);
+    clearHistoryAfter(ID_in_Queue);
     Global::fetchInstructionQueue.clear();
     Global::ROBuffer.clear();
     Global::RS_INT_Queue.clear();
@@ -131,9 +164,8 @@ void HistorySnapshot::flush(int ID_in_Queue, bool actucalPrediction){
     Global::BUQueue.clear();
     Global::LoadQueue.clear();
     Global::LoadHazardQueue.clear();
-    Global::LoadResultQueue.clear();
+    Global::LoadQueue.clear();
     Global::fetch_pointer=0;
-    Global::historySnapshot.clear();
     Global::robHead=0;
     Global::robTail=0;
     Global::ROBuffer.clear();
@@ -148,7 +180,7 @@ void HistorySnapshot::flush(int ID_in_Queue, bool actucalPrediction){
     Global::BUQueue.clear();
     Global::LoadQueue.clear();
     Global::LoadHazardQueue.clear();
-    Global::LoadResultQueue.clear();
+    Global::StoreQueue.clear();
     //回滚RAT,寄存器值instructionQueue,设置fetch pointer
     Global::memory_value = snapshot->memory_value;
     Global::renaming_worker = snapshot->renaming_worker;
@@ -158,7 +190,7 @@ void HistorySnapshot::flush(int ID_in_Queue, bool actucalPrediction){
     Global::instructionQueue=snapshot->instructionQueue;
     Global::stallCount_ROBFull=snapshot->stallCount_ROBFull;
     Global::renameStall=snapshot->renameStall;
-    Global::dependency_map=snapshot->dependency_map;
+
 }
 
 Snapshot* HistorySnapshot::findMatchingSnapshot(int ID_in_Queue) {
