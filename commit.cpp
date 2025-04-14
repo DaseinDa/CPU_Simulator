@@ -23,7 +23,8 @@ while(Global::ROBuffer[Global::robHead].done && Global::robHead!=(Global::robTai
         Global::renaming_worker.physicalRegister[entry.dest_physical_register.value()].isReady=false;
         Global::renaming_worker.registerRenamingMapping.erase(entry.dest_physical_register.value());
         Global::renaming_worker.RegisterRenamingFreeList.push_back(entry.dest_physical_register.value());
-        Global::architectureRegisterFile.at(entry.dest_archi_register.value()).value=get<int>(entry.value);
+        Global::architectureRegisterFile.at(entry.dest_archi_register.value()).value=get<int>(entry.value);""
+        cout<<"commit int "<<entry.dest_archi_register.value()<<" "<<get<int>(entry.value)<<" "<<entry.dest_physical_register.value()<<endl;
     }
     else if(entry.opcode==InstructionType::fadd || InstructionType::fsub || InstructionType::fmul || InstructionType::fdiv){
         // Global::renaming_worker.physicalRegister.erase(entry.dest_physical_register.value());
