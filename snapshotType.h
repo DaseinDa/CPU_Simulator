@@ -14,6 +14,7 @@ struct Snapshot {
     ~Snapshot();
     Instruction bne_instruction;
     int current_cycle=0;
+    int ID_in_Queue=0;
     unordered_map<string, size_t> labelMap;
     unordered_map<int, double> memory_value;
     RegisterRenaming renaming_worker;

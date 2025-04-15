@@ -88,7 +88,7 @@ namespace Global {
 
 string getInstructionAddress(int instructionNumber);
 int getBTBposition(int instructionNumber);
-
+static void printCompleteQueue();
 
 
 // 调转执行示例:

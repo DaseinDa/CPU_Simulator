@@ -19,7 +19,7 @@ void Issue::issue(){
         Instruction inst=Global::decodeInstructionQueue.front();
         //分配ROB,还是要写按opcode解析成ROBEntry
         //如果robHead和robTail相等，说明ROB满了
-        if(inst.ID_in_Queue.value()%NR==Global::robHead){
+        if((inst.ID_in_Queue.value()+1)%NR==Global::robHead){
             robStallThisCycle=true;
         }
         //发射到reservationStation,如果全部RS avaialable, issue就发射四条。如果RS满了那每次issue只能发射<4条或者不发射，剩下等待到下一个cycle
@@ -43,7 +43,7 @@ void Issue::issue(){
                 }
                 break;
             case InstructionType::fsd:
-                if(Global::RS_STORE_Queue.size()<RS_STORE_SIZE){
+                if(Global::RS_STORE_Queue.size()>=RS_STORE_SIZE){
                     cout<<"Issue: RS_STORE is full"<<endl;
                     rsStallThisCycle=true;
                     Global::rsFullNumber++;
@@ -51,28 +51,28 @@ void Issue::issue(){
                 break;
             case InstructionType::fadd:
             case InstructionType::fsub:
-                if(Global::RS_FPadd_Queue.size()<RS_FPADD_SIZE){
+                if(Global::RS_FPadd_Queue.size()>=RS_FPADD_SIZE){
                     cout<<"Issue: RS_FPadd is full"<<endl;
                     rsStallThisCycle=true;
                     Global::rsFullNumber++;
                 }
                 break;
             case InstructionType::fmul:
-                if(Global::RS_FPmult_Queue.size()<RS_FPMULT_SIZE){
+                if(Global::RS_FPmult_Queue.size()>=RS_FPMULT_SIZE){
                     cout<<"Issue: RS_FPmult is full"<<endl;
                     rsStallThisCycle=true;
                     Global::rsFullNumber++;
                 }   
                 break;
             case InstructionType::fdiv:
-                if(Global::RS_FPdiv_Queue.size()<RS_FPDIV_SIZE){
+                if(Global::RS_FPdiv_Queue.size()>=RS_FPDIV_SIZE){
                     cout<<"Issue: RS_FPmult is full"<<endl;
                     rsStallThisCycle=true;
                     Global::rsFullNumber++;
                 }
                 break;
             case InstructionType::bne:
-                if(Global::RS_BU_Queue.size()<RS_FPBU_SIZE){
+                if(Global::RS_BU_Queue.size()>=RS_FPBU_SIZE){
                     cout<<"Issue: RS_BU is full"<<endl;
                     rsStallThisCycle=true;
                     Global::rsFullNumber++;  
@@ -84,11 +84,14 @@ void Issue::issue(){
                 break;
         }
         if (rsStallThisCycle || robStallThisCycle) {
+
+            cout<<" full ----------------RS ROB--------"<<endl;
             if (rsStallThisCycle) Global::stallCount_RSFull++;
             if (robStallThisCycle) Global::stallCount_ROBFull++;
             break; // 当前周期资源不足，跳出 issue loop
         }
         if(!rsStallThisCycle && !robStallThisCycle){
+
             Global::decodeInstructionQueue.pop_front();
             Global::instructionQueue[inst.ID_in_Queue.value()].status_in_Queue=InstructionStatus::ISSUE;
             //分配ROB
@@ -128,6 +131,14 @@ void Issue::issue(){
                 rs_entry.A=inst.immediate;
                 rs_entry.ID_in_Queue=inst.ID_in_Queue.value();
                 insert2RS(rs_entry);
+                // if(!Global::RS_INT_Queue.empty()){
+                //     cout<<"Issue: RS_INT_Queue is not empty"<<endl;
+                //     sleep(60);
+                // }
+                // for(int i=0;i<Global::RS_INT_Queue.size();i++){
+                //     cout<<"Opcode addi"<<Global::RS_INT_Queue[i].ID_in_Queue<<endl;
+                //     sleep(30);
+                // }
 
         }
 }
@@ -141,19 +152,26 @@ void Issue::insert2RS(ReservationStationEntry& rs_entry){
             case InstructionType::addi:
             case InstructionType::slt:
                 Global::RS_INT_Queue.push_back(rs_entry);
+                break;
             case InstructionType::fld:
                 Global::RS_LOAD_Queue.push_back(rs_entry);
+                break;
             case InstructionType::fsd:
                 Global::RS_STORE_Queue.push_back(rs_entry);
+                break;
             case InstructionType::fadd:
             case InstructionType::fsub:
                 Global::RS_FPadd_Queue.push_back(rs_entry);
+                break;
             case InstructionType::fmul:
-                    Global::RS_FPmult_Queue.push_back(rs_entry);
+                Global::RS_FPmult_Queue.push_back(rs_entry);
+                break;
             case InstructionType::fdiv:
                     Global::RS_FPdiv_Queue.push_back(rs_entry);
+                    break;
             case InstructionType::bne:
                     Global::RS_BU_Queue.push_back(rs_entry);
+                    break;
             default:
                 cout<<"Issue: Unknown instruction"<<endl;
                 Global::rsFullNumber++;

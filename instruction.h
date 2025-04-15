@@ -30,6 +30,7 @@ public:
     //当开始fetch时候，记录指令的程序顺序和status
     optional<int> ID_in_Queue;
     optional<InstructionStatus> status_in_Queue;
+    optional<bool> bne_taken;
     string Qj;
     string Qk;
     double Vj=0;

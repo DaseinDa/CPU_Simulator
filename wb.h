@@ -14,4 +14,5 @@ class WriteBack{
     public:
     WriteBack();
     void writeBack();
+    void printCompleteQueue();
 };

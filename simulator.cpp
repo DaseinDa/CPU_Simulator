@@ -203,8 +203,86 @@ void Simulator::run(){
     // while(Global::fetchInstructionQueue.size() > 0 || Global::decodeInstructionQueue.size() > 0 ||  Global::ROBuffer.size()>0);
     // do pipelineGlobalCycle();
     // while(Global::fetchInstructionQueue.size() > 0);
-    for(int i=0;i<50;i++){
-        sleep(1);
+    for(int i=0;i<1000;i++){
         pipelineGlobalCycle();
+        // sleep(10);
+        debugLogger();
     }
+}
+
+void Simulator::debugLogger() {
+    cout << "\n================ DEBUG LOGGER @ Cycle " << global_cycle << " ================\n";
+
+    // RS_INT Queue
+    cout << "[RS_INT_Queue] Size: " << Global::RS_INT_Queue.size() << endl;
+    for (const auto& entry : Global::RS_INT_Queue) {
+        cout << "  [ID: " << entry.ID_in_Queue
+            << ", Opcode: " << entry.opcode
+            << ", DestPR: " << entry.destPhysicalRegister
+            << ", DestROB: " << entry.destROB << "]\n"
+            << "  Qj: " << (entry.Qj.empty() ? "READY" : entry.Qj)
+            << " | Vj: " << entry.Vj << "\n"
+            << "  Qk: " << (entry.Qk.empty() ? "READY" : entry.Qk)
+            << " | Vk: " << entry.Vk << "\n"
+            << endl;
+    }
+    //RS_FPmult Queue
+    cout << "[RS_FPmult_Queue] Size: " << Global::RS_FPmult_Queue.size() << endl;
+    for (const auto& entry : Global::RS_FPmult_Queue) {
+        cout << "  [ID: " << entry.ID_in_Queue
+            << ", Opcode: " << entry.opcode
+            << ", DestPR: " << entry.destPhysicalRegister
+            << ", DestROB: " << entry.destROB << "]\n"
+            << "  Qj: " << (entry.Qj.empty() ? "READY" : entry.Qj)
+            << " | Vj: " << entry.Vj << "\n"
+            << "  Qk: " << (entry.Qk.empty() ? "READY" : entry.Qk)
+            << " | Vk: " << entry.Vk << "\n"
+            << endl;
+    }
+    
+    // RS_LOAD Queue
+    cout << "[RS_LOAD_Queue] Size: " << Global::RS_LOAD_Queue.size() << endl;
+    for (const auto& entry : Global::RS_LOAD_Queue) {
+        cout << "  [ID: " << entry.ID_in_Queue << ", A: " << entry.A.value() << "]\n";
+    }
+    //RS_BU Queue
+    cout << "[RS_BU_Queue] Size: " << Global::RS_BU_Queue.size() << endl;
+        for (const auto& entry : Global::RS_BU_Queue) {
+        cout << "  [ID: " << entry.ID_in_Queue
+            << ", Opcode: " << entry.opcode
+            << ", DestPR: " << entry.destPhysicalRegister
+            << ", DestROB: " << entry.destROB << "]\n"
+            << "  Qj: " << (entry.Qj.empty() ? "READY" : entry.Qj)
+            << " | Vj: " << entry.Vj << "\n"
+            << "  Qk: " << (entry.Qk.empty() ? "READY" : entry.Qk)
+            << " | Vk: " << entry.Vk << "\n"
+            << endl;
+    }
+    //BU Queue
+    cout << "[BU Queue] Size: " << Global::BUQueue.size() << endl;
+    //fetch size
+    cout << "[Fetch Queue] Size: " << Global::fetchInstructionQueue.size() << endl;
+    //decode size
+    cout << "[Decode Queue] Size: " << Global::decodeInstructionQueue.size() << endl;
+    // ROB
+    cout << "[ROB Buffer] Head: " << Global::robHead << ", Tail: " << Global::robTail << endl;
+    for (int i = 0; i < Global::ROBuffer.size(); ++i) {
+        const auto& rob_entry = Global::ROBuffer[i];
+        cout << "  [ROB " << i << "] ID: " << rob_entry.ID_in_Queue
+             << ", Opcode: " << static_cast<int>(rob_entry.opcode)
+             << ", Status: " << static_cast<int>(rob_entry.status)
+             << ", DestArch: " << (rob_entry.dest_archi_register.has_value() ? rob_entry.dest_archi_register.value() : "N/A")
+             << ", DestPR: " << (rob_entry.dest_physical_register.has_value() ? rob_entry.dest_physical_register.value() : "N/A")
+             << ", done: " << rob_entry.done << endl;
+    }
+
+    cout << "=====================================================================\n";
+
+        std::cout << "\n================= [Physical Register Status] =================\n";
+    for (const auto& [prName, prEntry] : Global::renaming_worker.physicalRegister) {
+    std::cout << std::setw(6) << prName 
+          << " | Ready: " << std::boolalpha << prEntry.isReady 
+          << " | Value: " << prEntry.value << std::endl;
+    }
+    std::cout << "==============================================================\n";
 }

@@ -23,7 +23,7 @@ static void checkRSOperandsReady() {
             if(Global::renaming_worker.physicalRegister.count(prf_id)) {
                 if (Global::renaming_worker.physicalRegister.at(prf_id).isReady) {
                     entry.Vj = Global::renaming_worker.physicalRegister.at(prf_id).value;
-                    entry.Qj.clear();  //标记为已就绪
+                    entry.Qj="";  //标记为已就绪
                 }
             }else{
                 throw runtime_error("prf_id not found for RS_INT_Queue");
@@ -34,7 +34,7 @@ static void checkRSOperandsReady() {
             if(Global::renaming_worker.physicalRegister.count(prf_id)) {
                 if (Global::renaming_worker.physicalRegister.at(prf_id).isReady) {
                     entry.Vk = Global::renaming_worker.physicalRegister.at(prf_id).value;
-                    entry.Qk.clear();
+                    entry.Qk="";
                 }
             }else{
                 throw runtime_error("prf_id not found for RS_INT_Queue");
@@ -48,7 +48,7 @@ static void checkRSOperandsReady() {
             if(Global::renaming_worker.physicalRegister.count(prf_id)) {
                 if (Global::renaming_worker.physicalRegister.at(prf_id).isReady) {
                     entry.Vj = Global::renaming_worker.physicalRegister.at(prf_id).value;
-                    entry.Qj.clear();  //标记为已就绪
+                    entry.Qj="";  //标记为已就绪
                 }
             }else{
                 throw runtime_error("prf_id not found for RS_LOAD_Queue");
@@ -59,7 +59,7 @@ static void checkRSOperandsReady() {
             if(Global::renaming_worker.physicalRegister.count(prf_id)) {
                 if (Global::renaming_worker.physicalRegister.at(prf_id).isReady) {
                     entry.Vk = Global::renaming_worker.physicalRegister.at(prf_id).value;
-                    entry.Qk.clear();
+                    entry.Qk="";
                 }
             }else{
                 throw runtime_error("prf_id not found for RS_LOAD_Queue");
@@ -73,7 +73,7 @@ static void checkRSOperandsReady() {
             if(Global::renaming_worker.physicalRegister.count(prf_id)) {
                 if (Global::renaming_worker.physicalRegister.at(prf_id).isReady) {
                     entry.Vj = Global::renaming_worker.physicalRegister.at(prf_id).value;
-                    entry.Qj.clear();  //标记为已就绪
+                    entry.Qj="";  //标记为已就绪
                 }
             }else{
                 throw runtime_error("prf_id not found for RS_STORE_Queue");
@@ -84,7 +84,7 @@ static void checkRSOperandsReady() {
             if(Global::renaming_worker.physicalRegister.count(prf_id)) {
                 if (Global::renaming_worker.physicalRegister.at(prf_id).isReady) {
                     entry.Vk = Global::renaming_worker.physicalRegister.at(prf_id).value;
-                    entry.Qk.clear();
+                    entry.Qk="";
                 }
             }else{
                 throw runtime_error("prf_id not found for RS_STORE_Queue");
@@ -98,7 +98,7 @@ static void checkRSOperandsReady() {
             if(Global::renaming_worker.physicalRegister.count(prf_id)) {
                 if (Global::renaming_worker.physicalRegister.at(prf_id).isReady) {
                     entry.Vj = Global::renaming_worker.physicalRegister.at(prf_id).value;
-                    entry.Qj.clear();  //标记为已就绪
+                    entry.Qj="";  //标记为已就绪
                 }
             }else{
                 throw runtime_error("prf_id not found for RS_FPadd_Queue");
@@ -109,7 +109,7 @@ static void checkRSOperandsReady() {
             if(Global::renaming_worker.physicalRegister.count(prf_id)) {
                 if (Global::renaming_worker.physicalRegister.at(prf_id).isReady) {
                     entry.Vk = Global::renaming_worker.physicalRegister.at(prf_id).value;
-                    entry.Qk.clear();
+                    entry.Qk="";
                 }
             }else{
                 throw runtime_error("prf_id not found for RS_FPadd_Queue");
@@ -123,7 +123,7 @@ static void checkRSOperandsReady() {
             if(Global::renaming_worker.physicalRegister.count(prf_id)) {
                 if (Global::renaming_worker.physicalRegister.at(prf_id).isReady) {
                     entry.Vj = Global::renaming_worker.physicalRegister.at(prf_id).value;
-                    entry.Qj.clear();  //标记为已就绪
+                    entry.Qj="";  //标记为已就绪
                 }
             }else{
                 throw runtime_error("prf_id not found for RS_FPmult_Queue");
@@ -134,7 +134,7 @@ static void checkRSOperandsReady() {
             if(Global::renaming_worker.physicalRegister.count(prf_id)) {
                 if (Global::renaming_worker.physicalRegister.at(prf_id).isReady) {
                     entry.Vk = Global::renaming_worker.physicalRegister.at(prf_id).value;
-                    entry.Qk.clear();
+                    entry.Qk="";
                 }
             }else{
                 throw runtime_error("prf_id not found for RS_FPmult_Queue");
@@ -148,7 +148,7 @@ static void checkRSOperandsReady() {
             if(Global::renaming_worker.physicalRegister.count(prf_id)) {
                 if (Global::renaming_worker.physicalRegister.at(prf_id).isReady) {
                     entry.Vj = Global::renaming_worker.physicalRegister.at(prf_id).value;
-                    entry.Qj.clear();  //标记为已就绪
+                    entry.Qj="";  //标记为已就绪
                 }
             }else{
                 throw runtime_error("prf_id not found for RS_FPdiv_Queue");
@@ -159,7 +159,7 @@ static void checkRSOperandsReady() {
             if(Global::renaming_worker.physicalRegister.count(prf_id)) {
                 if (Global::renaming_worker.physicalRegister.at(prf_id).isReady) {
                     entry.Vk = Global::renaming_worker.physicalRegister.at(prf_id).value;
-                    entry.Qk.clear();
+                    entry.Qk="";
                 }
             }else{
                 throw runtime_error("prf_id not found for RS_FPdiv_Queue");
@@ -173,7 +173,7 @@ static void checkRSOperandsReady() {
             if(Global::renaming_worker.physicalRegister.count(prf_id)) {
                 if (Global::renaming_worker.physicalRegister.at(prf_id).isReady) {
                     entry.Vj = Global::renaming_worker.physicalRegister.at(prf_id).value;
-                    entry.Qj.clear();  //标记为已就绪
+                    entry.Qj="";  //标记为已就绪
                 }
             }else{
                 throw runtime_error("prf_id not found for RS_BU_Queue");
@@ -184,7 +184,7 @@ static void checkRSOperandsReady() {
             if(Global::renaming_worker.physicalRegister.count(prf_id)) {
                 if (Global::renaming_worker.physicalRegister.at(prf_id).isReady) {
                     entry.Vk = Global::renaming_worker.physicalRegister.at(prf_id).value;
-                    entry.Qk.clear();
+                    entry.Qk="";
                 }
             }else{
                 throw runtime_error("prf_id not found for RS_BU_Queue");

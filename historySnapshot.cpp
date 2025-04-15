@@ -12,6 +12,7 @@ void HistorySnapshot::addSnapshot(Instruction bne_instruction) {
         throw runtime_error("addSnapshot() called with non-BNE instruction");
     }
     snapshot.bne_instruction = bne_instruction;
+    snapshot.ID_in_Queue=bne_instruction.ID_in_Queue.value();
     snapshot.current_cycle=Global::current_cycle;
     snapshot.labelMap=Global::labelMap;
     snapshot.memory_value=Global::memory_value;
@@ -19,7 +20,7 @@ void HistorySnapshot::addSnapshot(Instruction bne_instruction) {
     snapshot.instructionQueue=Global::instructionQueue;
     snapshot.fetchInstructionQueue=Global::fetchInstructionQueue;   
     snapshot.fetch_pointer=Global::fetch_pointer;
-    snapshot.btb=Global::btb;
+    // snapshot.btb=Global::btb;
     snapshot.architectureRegisterFile=Global::architectureRegisterFile;
     snapshot.decodeInstructionQueue=Global::decodeInstructionQueue;
     snapshot.renameStall=Global::renameStall;
@@ -57,29 +58,33 @@ void HistorySnapshot::addSnapshot(Instruction bne_instruction) {
     history_snapshots.push_back(snapshot);
 }
 
-void HistorySnapshot::predictionTrueFalseRecover(Instruction bne_instruction, bool actucalPrediction) {
+void HistorySnapshot::predictionTrueFalseRecover(Instruction bne_instruction, bool predictTaken) {
     //只有预测错误才会调用这个函数
     if(bne_instruction.opcode != InstructionType::bne) {
-        throw runtime_error("predictionTrueFalse() called with non-BNE instruction");
+        cout<<"false ID_in_Queue: "<<bne_instruction.ID_in_Queue.value()<<endl;
+        throw runtime_error("historySnapshot::predictionTrueFalseRecover() called with non-BNE instruction");
     }
     Snapshot* snapshot = findMatchingSnapshot(bne_instruction.ID_in_Queue.value());
 
-    //预测错误，恢复快照
+    //没找到匹配的快照
     if(snapshot == nullptr) {
-        throw runtime_error("predictionTrueFalse() called with non-BNE instruction");
+        cout<<"false ID_in_Queue: "<<bne_instruction.ID_in_Queue.value()<<endl;
+        cout<<"The history_snapshots size is: "<<history_snapshots.size()<<endl;
+        throw runtime_error("snapshot not found in the history_snapshots");
     }
     //1. 恢复memory_value
     //2. 恢复寄存器重命名
     //3. 恢复fetchInstructionQueue
     //4. 恢复instructionset
-    //5. 恢复fetch_pointer
-    //6. 恢复btb
+    //5. 恢复fetch_pointerb
     //得到新的fetch pointer
-    if(actucalPrediction){
+    if(!predictTaken){
         int target_position=Global::btb.getTargetPosition(bne_instruction.instructionNumber);
+        snapshot->bne_instruction.bne_taken=true;
         Global::fetch_pointer = target_position;
     }else{
-        Global::fetch_pointer++;
+        Global::fetch_pointer=bne_instruction.instructionNumber+1;
+        snapshot->bne_instruction.bne_taken=false;
     }
     Global::instructionQueue=snapshot->instructionQueue;
     Global::memory_value = snapshot->memory_value;
@@ -124,7 +129,7 @@ void HistorySnapshot::predictionTrueFalseRecover(Instruction bne_instruction, bo
     //9. 恢复commit
     //快照是在pointer指向bne时存储的，恢复快照会使得fetch pointer重新指向bne,这里要根据实际分支结果来更新fetch pointer
     //回滚完成后 预测器状态也会回滚到当初的状态，所以根据当初的分支预测器状态就能知道该bne预测时的结果
-    if(actucalPrediction) {
+    if(!predictTaken) {
         //Actual taken
         Global::fetch_pointer = snapshot->btb.getTargetPosition(bne_instruction.instructionNumber);//这个还是保留，因为说好根据address4-7索引entry
     } else {
@@ -195,7 +200,8 @@ void HistorySnapshot::flush(int ID_in_Queue, bool actucalPrediction){
 
 Snapshot* HistorySnapshot::findMatchingSnapshot(int ID_in_Queue) {
     for (auto& snap : history_snapshots) {
-        if (snap.bne_instruction.ID_in_Queue == ID_in_Queue) {
+        cout<<"snap.ID_in_Queue: "<<snap.bne_instruction.ID_in_Queue.value()<<endl;
+        if (snap.bne_instruction.ID_in_Queue.value() == ID_in_Queue) {
             return &snap;
         }
     }
@@ -212,6 +218,6 @@ void HistorySnapshot::clearHistoryAfter(int ID_in_Queue) {
 
     if (it != history_snapshots.end()) {
         // 删除 it 之后（含 it）的所有 snapshot
-        history_snapshots.erase(it, history_snapshots.end());
+        history_snapshots.erase(next(it), history_snapshots.end());
     }
 }

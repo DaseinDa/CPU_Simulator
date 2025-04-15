@@ -52,6 +52,7 @@ class Simulator{
     void readInstruction(string line);
     void readMemory(string line);
     void pipelineGlobalCycle();
+    void debugLogger();
 
     //Register renaming
     // void initSimulatorPhysicalRegs();

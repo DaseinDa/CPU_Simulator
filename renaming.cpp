@@ -10,7 +10,7 @@ void RegisterRenaming::initPhysicalRegs(){
         string physicalRegisterName="p"+to_string(i);
         //initialization
         physicalRegister[physicalRegisterName].value=0;
-        physicalRegister[physicalRegisterName].isReady=true;
+        physicalRegister[physicalRegisterName].isReady=false;
         //The free list of physical register not used, only distributed p1-p31
         RegisterRenamingFreeList.push_back(physicalRegisterName);
     }

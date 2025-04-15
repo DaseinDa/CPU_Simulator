@@ -35,12 +35,14 @@ void Fetch::fetchInstruction(){
         string target_str = fetch_intr.target.value();
         int target_position=Global::btb.getTargetPosition(fetch_intr.instructionNumber);
         // //添加历史快照
-        Global::historySnapshot.addSnapshot(fetch_intr);
         if(target_position!=-1){
             Global::fetch_pointer=target_position;
+            fetch_intr.bne_taken=true;
         }else{
-            Global::fetch_pointer++;// oredict not taken
+            Global::fetch_pointer++;// oredict n
+            fetch_intr.bne_taken=false;
         }
+        Global::historySnapshot.addSnapshot(fetch_intr);
     }else{
         Global::fetch_pointer++;
     }

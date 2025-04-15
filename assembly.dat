@@ -9,7 +9,7 @@
 116, 3
 124, 8
 200, 12
-addi R1, R0, 24
+addi R1, R0, 8
 addi R2, R0, 124
 fld F2, 200(R0)
 loop: fld F0, 0(R1)

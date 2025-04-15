@@ -13,18 +13,27 @@ bool Execute::execute(){
     int earliest_ID_in_Queue=getEarliestIDIn_RS_BU_Queue();
     cout<<"RS BU executing...... "<<endl;
     //如果RS_BU_Queue里没有ready的指令，则不执行
+    if(Global::RS_BU_Queue.empty()) cout<<"No instruction in BU Reservation Station"<<endl;
     if(!Global::RS_BU_Queue.empty()){
         for(issue=0;issue<UNIT_BU_NUMBER;issue++){
             //从ready的指令中找到最早的指令优先执行
-            if(Global::RS_BU_Queue.empty()) cout<<"No instruction in BU Reservation Station"<<endl; break;
+            if(Global::RS_BU_Queue.empty()) {cout<<"No instruction in BU Reservation Station"<<endl; break;}
             auto it = std::min_element(
                 Global::RS_BU_Queue.begin(), Global::RS_BU_Queue.end(),
                 [](const ReservationStationEntry& a, const ReservationStationEntry& b) {
-                    if (!a.Qj.empty() || a.Qk.empty()) return false;
-                    if (b.Qj.empty() || b.Qk.empty()) return true;
-                    return a.ID_in_Queue < b.ID_in_Queue;
+                    // 两者都 ready 才比较 ID
+                    if (a.Qj.empty() && a.Qk.empty() && b.Qj.empty() && b.Qk.empty()) {
+                        return a.ID_in_Queue < b.ID_in_Queue;
+                    }
+                    // a ready, b not ready -> a 优先
+                    if (a.Qj.empty() && a.Qk.empty()) return true;
+                    // b ready, a not ready -> b 优先
+                    if (b.Qj.empty() && b.Qk.empty()) return false;
+                    // 都不 ready，随便
+                    return false;
                 }
             );
+if (it != Global::RS_BU_Queue.end() && it->Qj.empty() && it->Qk.empty()) {
             BU_pipeline_entry.rs_entry=*it;
             BU_pipeline_entry.remaining_latency=it->latency;
             Global::BU_pipeline.push_back(BU_pipeline_entry);
@@ -34,8 +43,10 @@ bool Execute::execute(){
             it=Global::RS_BU_Queue.erase(it);
             break;
             cout<<"The ready earliest ID_in_Queue in RS_BU_Queue is: "<<it->ID_in_Queue<<endl;
+}
         }
     }
+    cout<<"The size of RS_BU_Queue is: "<<Global::RS_BU_Queue.size()<<endl;
     bool predictFalsestall=executeBU(earliest_ID_in_Queue);
     if(!predictFalsestall) return false;
 
@@ -44,6 +55,7 @@ bool Execute::execute(){
     PipelineStage INT_pipeline_entry;
     issue=0;
     if(!Global::RS_INT_Queue.empty()){
+        cout<<"execute!!!!!!!!!!!!!!!!!!!!!!!!!!"<<endl;
         for (auto entry=Global::RS_INT_Queue.begin();entry!=Global::RS_INT_Queue.end() && issue<UNIT_INT_NUMBER;) {
             if(Global::RS_INT_Queue.empty())break;
             if(entry->Qj.empty()&&entry->Qk.empty()){
@@ -68,7 +80,7 @@ bool Execute::execute(){
     issue=0;
     if(!Global::RS_LOAD_Queue.empty()){
         for (auto entry=Global::RS_LOAD_Queue.begin();entry!=Global::RS_LOAD_Queue.end() && issue<UNIT_LOAD_NUMBER;) {
-            if(Global::RS_LOAD_Queue.empty())break;
+            if(Global::RS_LOAD_Queue.empty()){break;}
             if(entry->Qj.empty()&&entry->Qk.empty()){
                 Global::instructionQueue[entry->ID_in_Queue].status_in_Queue=InstructionStatus::EXECUTE;
                 //发射进LOAD_pipeline
@@ -348,7 +360,7 @@ void Execute::executeFPMULT(){
         if(Global::FPmult_pipeline.empty()) break;//没有指令什么都不用执行
         entry->remaining_latency--;
         if(entry->remaining_latency==0){
-            int result=0;
+            double result=0;
             //运算完成
             //执行指令
             if(entry->rs_entry.opcode==fmul)result=entry->rs_entry.Vj*entry->rs_entry.Vk;
@@ -358,9 +370,11 @@ void Execute::executeFPMULT(){
             entry->rs_entry.result=result;
             //写进completeRSqueue,代表计算完成的指令
             insertCompletedEntry(entry->rs_entry);
-            //  Forwarding 原子操作：写入物理寄存器（PRF）并设置为ready
+            //从pipeline中删除
             string prf_id = entry->rs_entry.destPhysicalRegister;
             writePRF(prf_id, double(result));
+            entry = Global::FPmult_pipeline.erase(entry); // 最后再 erase
+
             //ROB和CDB在write back阶段更新
         }
         entry++;
@@ -383,9 +397,11 @@ void Execute::executeFPDIV(){
             entry->rs_entry.result=result;
             //写进completeRSqueue,代表计算完成的指令
             insertCompletedEntry(entry->rs_entry);
+            //从pipeline中删除
             //  Forwarding 原子操作：写入物理寄存器（PRF）并设置为ready
             string prf_id = entry->rs_entry.destPhysicalRegister;
             writePRF(prf_id, double(result));
+            entry=Global::FPdiv_pipeline.erase(entry);
             //ROB和CDB在write back阶段更新
         }
         entry++;
@@ -395,39 +411,58 @@ void Execute::executeFPDIV(){
 bool Execute::executeBU(int earliest_ID_in_Queue){
     //还是是begin开始，按照之前读指的顺序，begin是最早的。如果begin最小且true,那earliest_ID_in_Queue就变成RS BU中ID_in_Queue第二小的
     for(auto entry=Global::BU_pipeline.begin();entry!=Global::BU_pipeline.end();){
-        if(Global::BU_pipeline.empty()) break;//没有指令什么都不用执行
+        if(Global::BU_pipeline.empty()) {cout<<"No instruction in BU_pipeline"<<endl; break;}//没有指令什么都不用执行
         entry->remaining_latency--;
         if(entry->remaining_latency==0){
-            int result=0;
+            bool result=false;
             //运算完成
             //执行指令
-            if(entry->rs_entry.opcode==bne)result=entry->rs_entry.Vj==entry->rs_entry.Vk;
+            cout<<"R1 is: "<<entry->rs_entry.Vj<<endl;
+            if(entry->rs_entry.opcode==bne)result=(entry->rs_entry.Vj!=entry->rs_entry.Vk);
             else{
                 throw runtime_error("opcode is not BU");
             }
             entry->rs_entry.result=result;
+            //to get the snapshot
+            Snapshot* snapshot=Global::historySnapshot.findMatchingSnapshot(entry->rs_entry.ID_in_Queue);
             //在BTB中得到之前的分支预测结果
-            bool predictTaken=Global::btb.getPrediction(entry->rs_entry.ID_in_Queue);
+            bool predictTaken=snapshot->bne_instruction.bne_taken.value();
             bool predictTrueFalse=(predictTaken==result);
             //如果ID最大且预测正确，则earliest_ID_in_Queue变成RS BU中ID_in_Queue第二小的
+            //预测值此时不只来源于分支预测器。还有roll back后设置的值
             if(earliest_ID_in_Queue==entry->rs_entry.ID_in_Queue && predictTrueFalse){
                 earliest_ID_in_Queue=getEarliestIDIn_RS_BU_Queue();
                 //更新预测器状态
+                entry->rs_entry.result = result;
                 Global::btb.update(entry->rs_entry.ID_in_Queue,result);
                 //写进completeRSqueue,代表计算完成的指令
+                entry->rs_entry.predictTrueFalse=predictTrueFalse;
+                // entry->rs_entry.destPhysicalRegister=entry->rs_entry.destPhysicalRegister;
                 insertCompletedEntry(entry->rs_entry);
+                entry = Global::BU_pipeline.erase(entry);
             }else if(earliest_ID_in_Queue==entry->rs_entry.ID_in_Queue && !predictTrueFalse){
                 //立刻回滚，整个execute pipieline结束运行
+                entry->rs_entry.result = result;
+                entry->rs_entry.predictTrueFalse=predictTrueFalse;
                 Global::btb.update(entry->rs_entry.ID_in_Queue,result);
+                // entry->rs_entry.destPhysicalRegister=entry->rs_entry.destPhysicalRegister;
+                // insertCompletedEntry(entry->rs_entry);
+                // entry = Global::BU_pipeline.erase(entry);
+                cout<<"historySnapshot.predictionTrueFalseRecover"<<endl;
                 Global::historySnapshot.predictionTrueFalseRecover(Global::instructionQueue[entry->rs_entry.ID_in_Queue],predictTaken);
                 return false;
             }else{//不能在Execute直接回滚，只有传给ROB决定了,ROB还要判断回滚
+                entry->rs_entry.result = result;
                 entry->rs_entry.predictTrueFalse=predictTrueFalse;
+                entry->rs_entry.destPhysicalRegister=entry->rs_entry.destPhysicalRegister;
                 Global::btb.update(entry->rs_entry.ID_in_Queue,result);
                 insertBUEntry(entry->rs_entry);
+                entry = Global::BU_pipeline.erase(entry);
             }
             //ROB和CDB在write back阶段更新
         }
+        cout<<"The size of BU_pipeline is: "<<Global::BU_pipeline.size()<<endl;
+        cout<<"The size of BU_Queue is: "<<Global::BUQueue.size()<<endl;
         entry++;
     }
     return true;
@@ -442,7 +477,7 @@ void Execute::insertCompletedEntry(const ReservationStationEntry& entry) {
             return a.ID_in_Queue < b.ID_in_Queue;  // 升序排序标准
         }
     );
-
+    cout<< ".........................................insertCompletedEntry inserting ID_in_Queue: "<<entry.ID_in_Queue<<endl;
     Global::completeRSQueue.insert(it, entry);  // 插入到正确位置
 }
 
