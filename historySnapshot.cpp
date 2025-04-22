@@ -48,7 +48,7 @@ void HistorySnapshot::addSnapshot(Instruction bne_instruction) {
     snapshot.FPmult_pipeline=Global::FPmult_pipeline;
     snapshot.FPdiv_pipeline=Global::FPdiv_pipeline;
     snapshot.BU_pipeline=Global::BU_pipeline;
-    //完成计算的指令
+    //Instructions to complete the calculation
     snapshot.completeRSQueue=Global::completeRSQueue;
     snapshot.BUQueue=Global::BUQueue;
     //load store
@@ -59,25 +59,25 @@ void HistorySnapshot::addSnapshot(Instruction bne_instruction) {
 }
 
 void HistorySnapshot::predictionTrueFalseRecover(Instruction bne_instruction, bool predictTaken) {
-    //只有预测错误才会调用这个函数
+    //This function is called only if the prediction is wrong
     if(bne_instruction.opcode != InstructionType::bne) {
         cout<<"false ID_in_Queue: "<<bne_instruction.ID_in_Queue.value()<<endl;
         throw runtime_error("historySnapshot::predictionTrueFalseRecover() called with non-BNE instruction");
     }
     Snapshot* snapshot = findMatchingSnapshot(bne_instruction.ID_in_Queue.value());
 
-    //没找到匹配的快照
+    //No matching snapshots found
     if(snapshot == nullptr) {
         cout<<"false ID_in_Queue: "<<bne_instruction.ID_in_Queue.value()<<endl;
         cout<<"The history_snapshots size is: "<<history_snapshots.size()<<endl;
         throw runtime_error("snapshot not found in the history_snapshots");
     }
-    //1. 恢复memory_value
-    //2. 恢复寄存器重命名
-    //3. 恢复fetchInstructionQueue
-    //4. 恢复instructionset
-    //5. 恢复fetch_pointerb
-    //得到新的fetch pointer
+    //1. Restore memory_value
+    //2. Restore register rename
+    //3. Restore fetchInstructionQueue
+    //4. Restore instructionset
+    //5. Restore fetch_pointerb
+    //Get new fetch pointer
     if(!predictTaken){
         int target_position=Global::btb.getTargetPosition(bne_instruction.instructionNumber);
         snapshot->bne_instruction.bne_taken=true;
@@ -93,9 +93,9 @@ void HistorySnapshot::predictionTrueFalseRecover(Instruction bne_instruction, bo
     Global::decodeInstructionQueue=snapshot->decodeInstructionQueue;
     Global::architectureRegisterFile=snapshot->architectureRegisterFile;
     Global::renameStall=snapshot->renameStall;
-    //3. 恢复ROB
+    //3. Recover ROB
     Global::ROBuffer=snapshot->ROBuffer;
-    //4. 恢复reservation station
+    //4. Restore reservation station
     Global::RS_INT_Queue=snapshot->RS_INT_Queue;
     Global::RS_LOAD_Queue=snapshot->RS_LOAD_Queue;
     Global::RS_STORE_Queue=snapshot->RS_STORE_Queue;
@@ -103,7 +103,7 @@ void HistorySnapshot::predictionTrueFalseRecover(Instruction bne_instruction, bo
     Global::RS_FPmult_Queue=snapshot->RS_FPmult_Queue;
     Global::RS_FPdiv_Queue=snapshot->RS_FPdiv_Queue;
     Global::RS_BU_Queue=snapshot->RS_BU_Queue;
-    //5. 恢复ROB
+    //5. Recovering the ROB
     Global::stallCount_ROBFull=snapshot->stallCount_ROBFull;
     Global::robHead=snapshot->robHead;
     Global::robTail=snapshot->robTail;
@@ -122,28 +122,28 @@ void HistorySnapshot::predictionTrueFalseRecover(Instruction bne_instruction, bo
     Global::LoadQueue=snapshot->LoadQueue;
     Global::LoadHazardQueue=snapshot->LoadHazardQueue;
     Global::StoreQueue=snapshot->StoreQueue;
-    //5. 恢复decode
-    //6. 恢复issue
-    //7. 恢复execute
-    //8. 恢复write back
-    //9. 恢复commit
-    //快照是在pointer指向bne时存储的，恢复快照会使得fetch pointer重新指向bne,这里要根据实际分支结果来更新fetch pointer
-    //回滚完成后 预测器状态也会回滚到当初的状态，所以根据当初的分支预测器状态就能知道该bne预测时的结果
+    //5. Restore decode
+    //6. Restore issue
+    //7. Restore execute
+    //8. Restore write back
+    //9. Restore commit
+    //The snapshot is stored when the pointer points to bne. Restoring the snapshot will make the fetch pointer point to bne again. Here, the fetch pointer needs to be updated according to the actual branch result
+    //After the rollback is completed, the predictor state will also roll back to the original state, so the result of the bne prediction can be known based on the original branch predictor state
     if(!predictTaken) {
         //Actual taken
-        Global::fetch_pointer = snapshot->btb.getTargetPosition(bne_instruction.instructionNumber);//这个还是保留，因为说好根据address4-7索引entry
+        Global::fetch_pointer = snapshot->btb.getTargetPosition(bne_instruction.instructionNumber);//This is still retained, because it is agreed to index entry according to address4-7
     } else {
         //Actual not taken
         Global::fetch_pointer++;
     }   
 
-    //预测错误，当前bne后的路径错误，程序顺序不再使用，删除从现在现在的快照snap后的所有快照
+    //Prediction error, the path after the current bne is wrong, the program sequence is no longer used, delete all snapshots after the current snapshot snap
     clearHistoryAfter(bne_instruction.ID_in_Queue.value());
-//     auto it = std::find_if(history_snapshots.begin(), history_snapshots.end(),
-//         [snapshot](const Snapshot& snap) { return &snap == snapshot; });
-//     if (it != history_snapshots.end()) {
-//         history_snapshots.erase(it, history_snapshots.end());
-//     }
+    //     auto it = std::find_if(history_snapshots.begin(), history_snapshots.end(),
+    //         [snapshot](const Snapshot& snap) { return &snap == snapshot; });
+    //     if (it != history_snapshots.end()) {
+    //         history_snapshots.erase(it, history_snapshots.end());
+    //     }
 
 }
 void HistorySnapshot::flush(int ID_in_Queue, bool actucalPrediction){
@@ -186,7 +186,7 @@ void HistorySnapshot::flush(int ID_in_Queue, bool actucalPrediction){
     Global::LoadQueue.clear();
     Global::LoadHazardQueue.clear();
     Global::StoreQueue.clear();
-    //回滚RAT,寄存器值instructionQueue,设置fetch pointer
+    //Roll back RAT, register value instructionQueue, set fetch pointer
     Global::memory_value = snapshot->memory_value;
     Global::renaming_worker = snapshot->renaming_worker;
     Global::rsFullNumber=snapshot->rsFullNumber;

@@ -18,6 +18,12 @@ int main(int argc, char *argv[])
     // NF--;
     int c = 0; //receive the option
     char* PathFile=optarg;
+    PathFile = "assembly.dat";
+    unsigned int NF=4;
+    unsigned int NI=16;
+    unsigned int NW=4;
+    unsigned int NR=16;
+    unsigned int NB=4;
     /*loop processing parameters*/
     while(EOF != (c = getopt(argc,argv,"han:")))
     {
@@ -26,26 +32,31 @@ int main(int argc, char *argv[])
         switch(c)
         {
             case 'p':
-                printf("we get option -f\n");
+                printf("we get option file -p\n");
                 PathFile=optarg;
                 break;
             case 'f':
-                printf("we get option -a\n");
+                printf("we get option -f NFi, NI\n");
+                NF=atoi(optarg);
                 break;
-            //-n选项必须要参数
+            //-n option must have input parameters
             case 'i':
                 printf("we get option -ni,para is %s\n",optarg);
+                NI=atoi(optarg);
                 break;
             case 'w':
                 printf("we get option -nw,para is %s\n",optarg);
+                NW=atoi(optarg);
                 break;
             case 'b':
                 printf("we get option -nb,para is %s\n",optarg);
+                NB=atoi(optarg);
                 break;
             case 'r':
                 printf("we get option -nr,para is %s\n",optarg);
+                NR=atoi(optarg);
                 break;
-            //表示选项不支持
+            //not supporting options
             case '?':
                 printf("unknow option:%c\n",optopt);
                 break;
@@ -55,7 +66,7 @@ int main(int argc, char *argv[])
     }
     Global::ROBuffer = vector<ROBEntry>(NR);
     Simulator simulator;
-    simulator.ReadAssemblyFile("assembly.dat");
+    simulator.ReadAssemblyFile(PathFile);
     simulator.run();
     return 0;
 }

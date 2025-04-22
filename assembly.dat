@@ -20,4 +20,3 @@ loop: fld F0, 0(R1)
       addi R1, R1, -8
       addi R2, R2, -8
       bne R1,$0, loop
-addi R1, R0, 36

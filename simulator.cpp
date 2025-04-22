@@ -127,7 +127,6 @@ void Simulator::ReadAssemblyFile(char * PathFile){
                     readInstruction(line);
                     index++;
                 }
-
                 // parseAssemblyLine(line,currentLabel,inLabelScope);
         }
     }
@@ -167,7 +166,7 @@ void Simulator::pipelineGlobalCycle(){
     //memory access
     //execute
     //decode+issue
-    //fetch一个cycle只能fetch 4个instruction,fetech不分发是否应该统计为stall
+    //fetch一个cycle只能fetch 4个instruction,fetch不分发是否应该统计为stall
     //fetch最后执行因为需要先检查更早执行的指令是不是先能进入下一个状态释放出早期执行的资源
     //decode+issue
     cout<<"---------------------------------------------------------------------------------------------------------------------------"<<endl;
@@ -183,11 +182,9 @@ void Simulator::pipelineGlobalCycle(){
     c->commit();
     w->writeBack();
     e->execute();
-    i->issue();
+    i->issue();// The stall for issue, execute and commit are mainly caused by ROB and RS full
     if(!d->decode()) decodeStall++;
     if(!f->fetch()) fetchStall++;
-
-
     // e->execute();
     // w->writeBack();
     // c->commit();
@@ -203,11 +200,28 @@ void Simulator::run(){
     // while(Global::fetchInstructionQueue.size() > 0 || Global::decodeInstructionQueue.size() > 0 ||  Global::ROBuffer.size()>0);
     // do pipelineGlobalCycle();
     // while(Global::fetchInstructionQueue.size() > 0);
-    for(int i=0;i<1000;i++){
-        pipelineGlobalCycle();
-        // sleep(10);
-        debugLogger();
+    // for(int i=0;i<1000;i++){
+    //     pipelineGlobalCycle();
+    //     // sleep(10);
+    //     debugLogger();
+    // }
+    while (
+    !Global::fetchInstructionQueue.empty() ||
+    !Global::decodeInstructionQueue.empty() ||
+    Global::robHead != Global::robTail+1 ||
+    !Global::RS_INT_Queue.empty() ||
+    !Global::RS_FPadd_Queue.empty() ||
+    !Global::RS_FPmult_Queue.empty() ||
+    !Global::RS_LOAD_Queue.empty() ||
+    !Global::RS_STORE_Queue.empty() ||
+    !Global::RS_BU_Queue.empty()|| global_cycle<10
+    ){
+                pipelineGlobalCycle();
+                debugLogger();
     }
+    cout<<"It uses "<<global_cycle<<"cycles to run the assembly file";
+    cout<<"The rob stalls is: "<<Global::stallCount_ROBFull<<endl;
+    cout<<"The rs stalls is: "<<Global::stallCount_RSFull<<endl;
 }
 
 void Simulator::debugLogger() {

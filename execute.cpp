@@ -409,14 +409,14 @@ void Execute::executeFPDIV(){
 }
 
 bool Execute::executeBU(int earliest_ID_in_Queue){
-    //还是是begin开始，按照之前读指的顺序，begin是最早的。如果begin最小且true,那earliest_ID_in_Queue就变成RS BU中ID_in_Queue第二小的
+    //It still starts with begin. According to the order of reading the pointer before, begin is the earliest. If begin is the smallest and true, then earliest_ID_in_Queue becomes the second smallest ID_in_Queue in RS BU
     for(auto entry=Global::BU_pipeline.begin();entry!=Global::BU_pipeline.end();){
         if(Global::BU_pipeline.empty()) {cout<<"No instruction in BU_pipeline"<<endl; break;}//没有指令什么都不用执行
         entry->remaining_latency--;
         if(entry->remaining_latency==0){
             bool result=false;
-            //运算完成
-            //执行指令
+            //Operation completed
+            //Execute instruction
             cout<<"R1 is: "<<entry->rs_entry.Vj<<endl;
             if(entry->rs_entry.opcode==bne)result=(entry->rs_entry.Vj!=entry->rs_entry.Vk);
             else{
@@ -425,23 +425,23 @@ bool Execute::executeBU(int earliest_ID_in_Queue){
             entry->rs_entry.result=result;
             //to get the snapshot
             Snapshot* snapshot=Global::historySnapshot.findMatchingSnapshot(entry->rs_entry.ID_in_Queue);
-            //在BTB中得到之前的分支预测结果
+            //Get the previous branch prediction result in BTB
             bool predictTaken=snapshot->bne_instruction.bne_taken.value();
             bool predictTrueFalse=(predictTaken==result);
-            //如果ID最大且预测正确，则earliest_ID_in_Queue变成RS BU中ID_in_Queue第二小的
-            //预测值此时不只来源于分支预测器。还有roll back后设置的值
+            //If the ID is the largest and the prediction is correct, the earliest_ID_in_Queue becomes the second smallest ID_in_Queue in the RS BU
+            //The prediction value does not only come from the branch predictor. There is also the value set after rollback
             if(earliest_ID_in_Queue==entry->rs_entry.ID_in_Queue && predictTrueFalse){
                 earliest_ID_in_Queue=getEarliestIDIn_RS_BU_Queue();
-                //更新预测器状态
+                //Update predictor status
                 entry->rs_entry.result = result;
                 Global::btb.update(entry->rs_entry.ID_in_Queue,result);
-                //写进completeRSqueue,代表计算完成的指令
+                //Write into completeRSqueue, indicating the instruction of the completed calculation
                 entry->rs_entry.predictTrueFalse=predictTrueFalse;
                 // entry->rs_entry.destPhysicalRegister=entry->rs_entry.destPhysicalRegister;
                 insertCompletedEntry(entry->rs_entry);
                 entry = Global::BU_pipeline.erase(entry);
             }else if(earliest_ID_in_Queue==entry->rs_entry.ID_in_Queue && !predictTrueFalse){
-                //立刻回滚，整个execute pipieline结束运行
+                //Roll back immediately, and the entire execute pipeline ends.
                 entry->rs_entry.result = result;
                 entry->rs_entry.predictTrueFalse=predictTrueFalse;
                 Global::btb.update(entry->rs_entry.ID_in_Queue,result);
@@ -451,7 +451,7 @@ bool Execute::executeBU(int earliest_ID_in_Queue){
                 cout<<"historySnapshot.predictionTrueFalseRecover"<<endl;
                 Global::historySnapshot.predictionTrueFalseRecover(Global::instructionQueue[entry->rs_entry.ID_in_Queue],predictTaken);
                 return false;
-            }else{//不能在Execute直接回滚，只有传给ROB决定了,ROB还要判断回滚
+            }else{//You cannot roll back directly in Execute. You have to pass it to ROB for decision. ROB also needs to make a decision on rollback.
                 entry->rs_entry.result = result;
                 entry->rs_entry.predictTrueFalse=predictTrueFalse;
                 entry->rs_entry.destPhysicalRegister=entry->rs_entry.destPhysicalRegister;
@@ -459,7 +459,7 @@ bool Execute::executeBU(int earliest_ID_in_Queue){
                 insertBUEntry(entry->rs_entry);
                 entry = Global::BU_pipeline.erase(entry);
             }
-            //ROB和CDB在write back阶段更新
+            //ROB and CDB are updated during the write back phase
         }
         cout<<"The size of BU_pipeline is: "<<Global::BU_pipeline.size()<<endl;
         cout<<"The size of BU_Queue is: "<<Global::BUQueue.size()<<endl;
