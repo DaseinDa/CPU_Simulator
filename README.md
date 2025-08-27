@@ -18,7 +18,7 @@ This project is a lightweight **instruction pipeline simulator** written in **C+
 
 Make sure you have a C++17-compatible compiler (e.g., `g++` 7.0 or higher) and `make` installed.
 
-```bash
+bash
 # In the project root directory
 make
 ./myapp
@@ -61,7 +61,7 @@ This project implements key concepts in modern processor design, including **Tom
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 ├── src/
