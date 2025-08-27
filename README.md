@@ -29,7 +29,7 @@ This project implements key concepts in modern processor design, including **Tom
 
 ---
 
-## 🚀 Features
+##  Features
 
 - **6-Stage Out-of-Order Pipeline**
   - **Fetch** – Up to `NF` instructions per cycle, with branch target buffer (BTB) lookup and prediction.  
@@ -82,7 +82,7 @@ This project implements key concepts in modern processor design, including **Tom
 ```
 ---
 
-## ⚙️ Installation and Usage
+##  Installation and Usage
 
 ### **1. Build**
 
