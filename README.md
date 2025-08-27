@@ -87,8 +87,8 @@ This project implements key concepts in modern processor design, including **Tom
 ### **1. Build**
 
 ```bash
-git clone https://github.com/<your-username>/<your-repo>.git
-cd <your-repo>
+git clone https://github.com/DaseinDa/CPU_Simulator.git
+cd CPU_Simulator
 make
 ```
 
