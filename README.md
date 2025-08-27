@@ -1,4 +1,4 @@
-<img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/eedbb709-321b-42e9-8c4f-0bac970397fb" /># CPU Simulator
+<img width="500" height="500" alt="image" src="https://github.com/user-attachments/assets/eedbb709-321b-42e9-8c4f-0bac970397fb" /># CPU Simulator
 
 This project is a lightweight **instruction pipeline simulator** written in **C++17**, designed to model the internal behavior of a modern CPU according to RISC V ISA. It simulates the execution of instructions through a pipeline and outputs the state of the **Reorder Buffer (ROB)** and **Reservation Stations** at each clock **cycle**.
 
@@ -79,7 +79,6 @@ This project implements key concepts in modern processor design, including **Tom
 ├── Makefile
 └── README.md
 ```
-![Alt text](diagram.png)
 ---
 
 ## ⚙️ Installation and Usage
